@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Planner Dashboard | Parker & Jolan</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8C%B8%3C/text%3E%3C/svg%3E">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <nav class="site-nav">
+    <div class="container">
+      <a href="index.html" class="site-nav__logo">P &amp; J</a>
+      <ul class="site-nav__links">
+        <li><a href="index.html">Site</a></li>
+        <li><a href="#" id="logout-link" hidden>Log out</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <section class="admin-page">
+    <div class="container">
+
+      <div id="admin-login" class="rsvp-card">
+        <h2>Planner Login</h2>
+        <form id="login-form">
+          <label class="rsvp-label" for="login-email">Email</label>
+          <input type="email" id="login-email" required autocomplete="username">
+          <label class="rsvp-label" for="login-password">Password</label>
+          <input type="password" id="login-password" required autocomplete="current-password">
+          <button type="submit" class="btn">Log in</button>
+          <p id="login-error" class="rsvp-hint" hidden></p>
+        </form>
+      </div>
+
+      <div id="admin-dashboard" hidden>
+        <div class="section-heading" style="text-align:left; margin-bottom: var(--space-md);">
+          <h2>Planner Dashboard</h2>
+        </div>
+
+        <div class="admin-stats" id="admin-stats"></div>
+
+        <div class="admin-panel">
+          <h3>Add Party</h3>
+          <form id="add-party-form" class="admin-inline-form">
+            <input type="text" id="new-party-name" placeholder="Party name (e.g. The Motyka Family)" required>
+            <button type="submit" class="btn btn--outline">Add Party</button>
+          </form>
+        </div>
+
+        <div class="admin-panel">
+          <h3>Add Guest</h3>
+          <form id="add-guest-form" class="admin-inline-form">
+            <select id="new-guest-party" required></select>
+            <input type="text" id="new-guest-first" placeholder="First name" required>
+            <input type="text" id="new-guest-last" placeholder="Last name" required>
+            <label><input type="checkbox" id="new-guest-invited" checked> Invited</label>
+            <button type="submit" class="btn btn--outline">Add Guest</button>
+          </form>
+        </div>
+
+        <div class="admin-panel">
+          <div class="admin-panel__header">
+            <h3>Guest List</h3>
+            <button id="export-csv" class="btn btn--outline" type="button">Export CSV (Zola format)</button>
+          </div>
+          <div class="admin-table-wrap">
+            <table class="admin-table" id="guest-table">
+              <thead>
+                <tr>
+                  <th>Party</th>
+                  <th>First</th>
+                  <th>Last</th>
+                  <th>Invited</th>
+                  <th>RSVP</th>
+                  <th>Meal</th>
+                  <th>Dietary Notes</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="guest-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="site-footer__names">Parker &amp; Jolan</div>
+    <p>June 12, 2027 &middot; parkerandjolan.com</p>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script type="module" src="js/admin.js"></script>
+</body>
+</html>

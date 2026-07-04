@@ -4,12 +4,14 @@
 
 A custom wedding website for Parker & Jolan, live at **parkerandjolan.com**. It is a
 hand-built HTML/CSS/JS site (no framework, no build step) that handles the design,
-storytelling, and content, while offloading RSVP and registry functionality to
-**Zola** via embedded widgets/snippets rather than reimplementing them.
+storytelling, and content. RSVP is a custom-built system on top of Supabase
+(guest database, search-and-respond flow, admin dashboard); registry
+functionality is still offloaded to **Zola** via embedded widgets/snippets
+rather than reimplemented.
 
 The goal is a site that looks and feels custom-designed (specific theme, palette,
-and animations pulled from inspiration references) without having to build guest
-management, RSVP forms, or registry aggregation from scratch.
+and animations pulled from inspiration references), while owning the guest list
+and RSVP data outright instead of handing it to a third party.
 
 ## Tech stack
 
@@ -18,13 +20,21 @@ management, RSVP forms, or registry aggregation from scratch.
 - **Animations/interactions**: hand-written CSS transitions/keyframes and vanilla
   JS (e.g. scroll reveals, hover states). Avoid pulling in animation libraries
   unless a specific effect genuinely needs one.
+- **Backend/database**: Supabase (Postgres + auto REST API + Auth), used for
+  the guest list, RSVP responses, and the admin dashboard's login. Accessed
+  from the static frontend via the `@supabase/supabase-js` client loaded as a
+  plain ES module `<script>` (CDN import, no bundler) — this keeps the RSVP
+  pages consistent with the rest of the site's no-build-step approach.
 - **Third-party integration**: Zola, embedded via their widget/embed snippets
-  (not raw iframes) for RSVP and registry. Treat Zola as the source of truth for
-  guest RSVP state and registry links — don't duplicate that data locally unless
-  a specific need arises (see Open Questions).
+  (not raw iframes), used for the **registry only** (no longer RSVP — that's
+  now custom, see "RSVP system" below). The guest database can export a CSV
+  formatted for Zola's guest-list import, kept as a fallback/parallel option,
+  not a dependency.
 - **Hosting**: Hostinger, static file hosting only (not Hostinger's drag-and-drop
   website builder). Deployment is uploading built HTML/CSS/JS/assets directly —
-  no server-side rendering, no backend process to keep running.
+  no server-side rendering, no backend process to keep running on Hostinger
+  itself (Supabase is the only piece of actual backend infrastructure, and it's
+  managed/hosted separately).
 - **Domain**: parkerandjolan.com, pointed at Hostinger.
 
 ## Project structure
@@ -32,10 +42,17 @@ management, RSVP forms, or registry aggregation from scratch.
 ```
 /
 ├── index.html          # main landing page
+├── rsvp.html            # guest-facing search + RSVP response flow
+├── admin.html           # planner dashboard (auth-gated)
 ├── css/
 │   └── style.css       # global styles, theme variables, animations
 ├── js/
-│   └── main.js         # interactions, scroll effects, Zola embed init if needed
+│   ├── main.js          # interactions, scroll effects, Zola embed init if needed
+│   ├── supabase-client.js  # shared Supabase client init (URL + anon key)
+│   ├── rsvp.js          # rsvp.html logic (search, party lookup, submit)
+│   └── admin.js         # admin.html logic (auth, stats, CRUD, CSV export)
+├── sql/
+│   └── schema.sql       # Supabase schema: tables, RLS policies, RPC functions
 ├── assets/
 │   ├── images/
 │   │   └── inspiration/  # reference screenshots/mockups driving the design
@@ -46,6 +63,39 @@ management, RSVP forms, or registry aggregation from scratch.
 Additional HTML pages (e.g. `story.html`, `travel.html`, `registry.html`) should
 live at the root alongside `index.html` and share `css/style.css` and
 `js/main.js` unless a page needs page-specific logic.
+
+## RSVP system
+
+Custom-built (not Zola) on top of Supabase. Design rationale: guests should
+only ever be able to read/write their own party's data, even though the
+Supabase anon key is public in page source — so guest-facing access goes
+through restricted Postgres RPC functions (`SECURITY DEFINER`), never raw
+table `SELECT`/`UPDATE`. RLS on the tables themselves stays deny-by-default
+for the anon role; only authenticated admin users get direct table access.
+
+**Data model** (`sql/schema.sql`)
+- `parties` — `id`, `party_name`, `notes`
+- `guests` — `id`, `party_id` (FK), `first_name`, `last_name`, `invited` (bool
+  — a party can have members not invited to this event), address fields,
+  `food_preference`, `dietary_notes`, `rsvp_status` (`pending`/`yes`/`no`),
+  `responded_at`, `extra` (jsonb, for fields added later)
+
+**Guest flow** (`rsvp.html` / `js/rsvp.js`)
+1. Search by name → RPC `search_guests(name)` returns only
+   `first_name, last_name, party_name, party_id` — never full guest rows.
+2. Guest picks their party → RPC `get_party_members(party_id)` returns only
+   that party's `invited = true` members.
+3. Guest submits responses for the whole party in one call → RPC
+   `submit_rsvp(party_id, responses[])`, which validates server-side that
+   every guest id in the payload belongs to `party_id` before writing. This
+   validation is the actual enforcement point for "can't RSVP on behalf of
+   people outside your party" — never rely on the client for it.
+
+**Admin dashboard** (`admin.html` / `js/admin.js`)
+- Supabase Auth (email/password) gates the page; RLS grants full table access
+  to authenticated users only.
+- Stats (invited/responded/attending/declined counts, meal breakdown), full
+  CRUD editor for parties/guests, CSV export (see Zola CSV format below).
 
 ## Design process
 
@@ -101,20 +151,26 @@ sections.
 
 ## Open questions / not yet decided
 
-- **Database**: whether this project needs its own database (e.g. for a
-  guestbook, custom guest data Zola doesn't cover) is undecided. Don't add a
-  backend/database dependency speculatively — revisit only when a concrete
-  feature requires it, and note that Hostinger static hosting has no
-  server-side runtime, so any future DB need would require a separate
-  backend/service, not something bolted onto the static files.
-- **Exact Zola embed snippets**: pending — Zola account/page needs to exist
-  first before embed codes can be pulled in.
+- **Full guest field list**: address, food preference, and RSVP y/n are
+  confirmed; remaining fields (e.g. plus-ones, song requests, table
+  assignment) still need to be enumerated before finalizing `sql/schema.sql`.
+- **Zola CSV export format**: the exact column mapping Zola expects for guest
+  list import is unknown until the Zola account/page exists to check against.
+- **Admin users**: who beyond Parker and Jolan gets a Supabase Auth login to
+  the admin dashboard is undecided.
+- **Exact Zola embed snippets** (registry): pending — Zola account/page needs
+  to exist first before embed codes can be pulled in.
 
 ## Working conventions
 
 - Keep the site static and dependency-free unless a real requirement forces
-  otherwise (e.g. don't add a bundler or framework "just in case").
-- Don't build custom RSVP/registry functionality — that's explicitly Zola's
-  job here.
+  otherwise (e.g. don't add a bundler or framework "just in case"). The RSVP
+  system is the one deliberate exception (Supabase) — don't add further
+  backend dependencies beyond it speculatively.
+- RSVP/admin functionality is now custom-built (see "RSVP system" above), not
+  Zola's job. Zola is only for the registry.
+- Never grant the anon/public Supabase role direct table access to `guests`
+  or `parties` — guest-facing reads/writes must go through the RPC functions
+  in `sql/schema.sql` so guests can't see or edit data outside their own party.
 - When adding new sections/pages, match the existing theme variables in
   `css/style.css` rather than introducing new ad hoc colors/fonts.
