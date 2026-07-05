@@ -92,8 +92,13 @@ for the anon role; only authenticated admin users get direct table access.
    people outside your party" — never rely on the client for it.
 
 **Admin dashboard** (`admin.html` / `js/admin.js`)
-- Supabase Auth (email/password) gates the page; RLS grants full table access
-  to authenticated users only.
+- Gated by a single shared master password (currently `admin`, for ease of
+  testing), not per-planner accounts — the login form only asks for a
+  password, which signs in to one fixed Supabase Auth account
+  (`ADMIN_EMAIL` in `js/admin.js`) behind the scenes. RLS grants full table
+  access to any `authenticated` session, so this is a credentials/UI
+  simplification, not a security regression — swap for real per-planner
+  accounts (Parker, Jolan, Elizabeth Motyka) before going live.
 - Stats (invited/responded/attending/declined counts, meal breakdown), full
   CRUD editor for parties/guests, CSV export (see Zola CSV format below).
 

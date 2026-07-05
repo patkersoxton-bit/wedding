@@ -15,6 +15,12 @@ const exportBtn = document.getElementById('export-csv');
 const FOOD_OPTIONS = ['', 'Chicken', 'Beef', 'Fish', 'Vegetarian'];
 const RSVP_OPTIONS = ['pending', 'yes', 'no'];
 
+// Single shared master-password login for testing — this is one fixed
+// Supabase Auth account behind the scenes (RLS grants full access to any
+// authenticated session, so which account it is doesn't matter for
+// security). Swap for per-planner accounts before going live.
+const ADMIN_EMAIL = 'admin@parkerandjolan.com';
+
 async function init() {
   const { data: { session } } = await supabase.auth.getSession();
   if (session) {
@@ -39,9 +45,8 @@ async function showDashboard() {
 
 loginForm.addEventListener('submit', async (e) => {
   e.preventDefault();
-  const email = document.getElementById('login-email').value;
   const password = document.getElementById('login-password').value;
-  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  const { error } = await supabase.auth.signInWithPassword({ email: ADMIN_EMAIL, password });
   if (error) {
     loginError.hidden = false;
     loginError.textContent = error.message;
