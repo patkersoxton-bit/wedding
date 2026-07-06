@@ -1,4 +1,4 @@
-import { supabase } from './supabase-client.js';
+import { supabase, safeQuery, friendlyErrorMessage } from './supabase-client.js';
 import { escapeHtml } from './escape.js';
 
 const searchInput = document.getElementById('search-input');
@@ -11,8 +11,18 @@ const partyName = document.getElementById('party-name');
 const partyMembers = document.getElementById('party-members');
 const rsvpForm = document.getElementById('rsvp-form');
 const backToSearch = document.getElementById('back-to-search');
+const rsvpError = document.getElementById('rsvp-error');
 
 const FOOD_OPTIONS = ['Chicken', 'Beef', 'Fish', 'Vegetarian'];
+
+function showRsvpError(message) {
+  rsvpError.textContent = message;
+  rsvpError.hidden = false;
+}
+
+function clearRsvpError() {
+  rsvpError.hidden = true;
+}
 
 let searchDebounce;
 searchInput.addEventListener('input', () => {
@@ -27,11 +37,13 @@ searchInput.addEventListener('input', () => {
 });
 
 async function runSearch(term) {
-  const { data, error } = await supabase.rpc('search_guests', { search_name: term });
+  const { data, error } = await safeQuery(supabase.rpc('search_guests', { search_name: term }));
   if (error) {
     console.error(error);
+    showRsvpError(friendlyErrorMessage(error, "We couldn't search the guest list. Please try again."));
     return;
   }
+  clearRsvpError();
   searchResults.innerHTML = '';
   searchEmpty.hidden = data.length > 0;
   for (const guest of data) {
@@ -47,11 +59,13 @@ async function runSearch(term) {
 }
 
 async function selectParty(partyId, name) {
-  const { data, error } = await supabase.rpc('get_party_members', { p_party_id: partyId });
+  const { data, error } = await safeQuery(supabase.rpc('get_party_members', { p_party_id: partyId }));
   if (error) {
     console.error(error);
+    showRsvpError(friendlyErrorMessage(error, "We couldn't load your party. Please try again."));
     return;
   }
+  clearRsvpError();
 
   partyName.textContent = name;
   partyMembers.innerHTML = '';
@@ -111,18 +125,20 @@ rsvpForm.addEventListener('submit', async (e) => {
     });
   });
 
-  const { error } = await supabase.rpc('submit_rsvp', { p_party_id: partyId, responses });
+  const { error } = await safeQuery(supabase.rpc('submit_rsvp', { p_party_id: partyId, responses }));
   if (error) {
     console.error(error);
-    alert('Something went wrong submitting your RSVP. Please try again.');
+    showRsvpError(friendlyErrorMessage(error, 'Something went wrong submitting your RSVP. Please try again.'));
     return;
   }
 
+  clearRsvpError();
   stepParty.hidden = true;
   stepDone.hidden = false;
 });
 
 backToSearch.addEventListener('click', () => {
+  clearRsvpError();
   stepParty.hidden = true;
   stepSearch.hidden = false;
   searchInput.value = '';

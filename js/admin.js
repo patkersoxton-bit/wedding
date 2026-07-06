@@ -1,4 +1,4 @@
-import { supabase } from './supabase-client.js';
+import { supabase, safeQuery, friendlyErrorMessage } from './supabase-client.js';
 import { buildPieCard, buildMeterCard } from './charts.js';
 import { escapeHtml } from './escape.js';
 
@@ -6,6 +6,7 @@ const loginSection = document.getElementById('admin-login');
 const dashboardSection = document.getElementById('admin-dashboard');
 const loginForm = document.getElementById('login-form');
 const loginError = document.getElementById('login-error');
+const dashboardError = document.getElementById('dashboard-error');
 const logoutLink = document.getElementById('logout-link');
 const statsEl = document.getElementById('admin-stats');
 const chartRow = document.getElementById('chart-row');
@@ -49,8 +50,25 @@ tabButtons.forEach((btn) => {
 // security). Swap for per-planner accounts before going live.
 const ADMIN_EMAIL = 'admin@parkerandjolan.com';
 
+function showDashboardError(message) {
+  dashboardError.textContent = message;
+  dashboardError.hidden = false;
+}
+
+function clearDashboardError() {
+  dashboardError.hidden = true;
+}
+
 async function init() {
-  const { data: { session } } = await supabase.auth.getSession();
+  const { data, error } = await safeQuery(supabase.auth.getSession());
+  if (error) {
+    console.error(error);
+    showLogin();
+    loginError.hidden = false;
+    loginError.textContent = friendlyErrorMessage(error, 'Could not check your session.');
+    return;
+  }
+  const { session } = data;
   if (session) {
     showDashboard();
   } else {
@@ -74,10 +92,10 @@ async function showDashboard() {
 loginForm.addEventListener('submit', async (e) => {
   e.preventDefault();
   const password = document.getElementById('login-password').value;
-  const { error } = await supabase.auth.signInWithPassword({ email: ADMIN_EMAIL, password });
+  const { error } = await safeQuery(supabase.auth.signInWithPassword({ email: ADMIN_EMAIL, password }));
   if (error) {
     loginError.hidden = false;
-    loginError.textContent = error.message;
+    loginError.textContent = friendlyErrorMessage(error, 'Login failed. Please try again.');
     return;
   }
   loginError.hidden = true;
@@ -91,11 +109,13 @@ logoutLink.addEventListener('click', async (e) => {
 });
 
 async function loadStats() {
-  const { data, error } = await supabase.from('guests').select('rsvp_status, invited, food_preference');
+  const { data, error } = await safeQuery(supabase.from('guests').select('rsvp_status, invited, food_preference'));
   if (error) {
     console.error(error);
+    showDashboardError(friendlyErrorMessage(error, 'Could not load stats.'));
     return;
   }
+  clearDashboardError();
   const invited = data.filter((g) => g.invited);
   const yes = invited.filter((g) => g.rsvp_status === 'yes').length;
   const no = invited.filter((g) => g.rsvp_status === 'no').length;
@@ -160,11 +180,13 @@ function renderCharts(invited, yes, no, pending) {
 }
 
 async function loadParties() {
-  const { data, error } = await supabase.from('parties').select('id, party_name').order('party_name');
+  const { data, error } = await safeQuery(supabase.from('parties').select('id, party_name').order('party_name'));
   if (error) {
     console.error(error);
+    showDashboardError(friendlyErrorMessage(error, 'Could not load parties.'));
     return;
   }
+  clearDashboardError();
   newGuestPartySelect.innerHTML = data
     .map((p) => `<option value="${p.id}">${escapeHtml(p.party_name)}</option>`)
     .join('');
@@ -172,15 +194,16 @@ async function loadParties() {
 }
 
 async function loadGuests() {
-  const { data, error } = await supabase
-    .from('guests')
-    .select('*, parties(party_name)')
-    .order('last_name');
+  const { data, error } = await safeQuery(
+    supabase.from('guests').select('*, parties(party_name)').order('last_name')
+  );
   if (error) {
     console.error(error);
+    showDashboardError(friendlyErrorMessage(error, 'Could not load the guest list.'));
     return;
   }
 
+  clearDashboardError();
   guestTableBody.innerHTML = '';
   for (const guest of data) {
     guestTableBody.appendChild(buildGuestRow(guest));
@@ -270,10 +293,10 @@ function buildGuestRow(guest) {
 }
 
 async function updateGuest(id, fields) {
-  const { error } = await supabase.from('guests').update(fields).eq('id', id);
+  const { error } = await safeQuery(supabase.from('guests').update(fields).eq('id', id));
   if (error) {
     console.error(error);
-    alert(`Saving that change failed: ${error.message}`);
+    alert(`Saving that change failed: ${friendlyErrorMessage(error, 'Unknown error.')}`);
     // Re-render the table so the cell shows what's actually stored, not the
     // edit that didn't stick.
     await Promise.all([loadStats(), loadGuests()]);
@@ -284,9 +307,10 @@ async function updateGuest(id, fields) {
 
 async function deleteGuest(id) {
   if (!confirm('Remove this guest?')) return;
-  const { error } = await supabase.from('guests').delete().eq('id', id);
+  const { error } = await safeQuery(supabase.from('guests').delete().eq('id', id));
   if (error) {
     console.error(error);
+    showDashboardError(friendlyErrorMessage(error, 'Could not delete that guest.'));
     return;
   }
   await Promise.all([loadStats(), loadGuests()]);
@@ -295,9 +319,10 @@ async function deleteGuest(id) {
 addPartyForm.addEventListener('submit', async (e) => {
   e.preventDefault();
   const nameInput = document.getElementById('new-party-name');
-  const { error } = await supabase.from('parties').insert({ party_name: nameInput.value });
+  const { error } = await safeQuery(supabase.from('parties').insert({ party_name: nameInput.value }));
   if (error) {
     console.error(error);
+    showDashboardError(friendlyErrorMessage(error, 'Could not add that party.'));
     return;
   }
   nameInput.value = '';
@@ -310,14 +335,17 @@ addGuestForm.addEventListener('submit', async (e) => {
   const lastInput = document.getElementById('new-guest-last');
   const invitedInput = document.getElementById('new-guest-invited');
 
-  const { error } = await supabase.from('guests').insert({
-    party_id: newGuestPartySelect.value,
-    first_name: firstInput.value,
-    last_name: lastInput.value,
-    invited: invitedInput.checked,
-  });
+  const { error } = await safeQuery(
+    supabase.from('guests').insert({
+      party_id: newGuestPartySelect.value,
+      first_name: firstInput.value,
+      last_name: lastInput.value,
+      invited: invitedInput.checked,
+    })
+  );
   if (error) {
     console.error(error);
+    showDashboardError(friendlyErrorMessage(error, 'Could not add that guest.'));
     return;
   }
   firstInput.value = '';
@@ -326,12 +354,12 @@ addGuestForm.addEventListener('submit', async (e) => {
 });
 
 exportBtn.addEventListener('click', async () => {
-  const { data, error } = await supabase
-    .from('guests')
-    .select('first_name, last_name, invited')
-    .order('last_name');
+  const { data, error } = await safeQuery(
+    supabase.from('guests').select('first_name, last_name, invited').order('last_name')
+  );
   if (error) {
     console.error(error);
+    showDashboardError(friendlyErrorMessage(error, 'Could not export the guest list.'));
     return;
   }
 

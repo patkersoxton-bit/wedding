@@ -1,9 +1,143 @@
--- Prototype seed data: one party (Parker & Jolan) to walk through the RSVP flow.
-insert into parties (id, party_name) values
-  ('00000000-0000-0000-0000-000000000001', 'Parker & Jolan')
-on conflict (id) do nothing;
-
+-- Test data: real guest list names imported from "guest list.docx.md" to
+-- exercise the guests table fields end-to-end. Party assignments are left
+-- NULL on every row — the party/tree structure isn't decided yet and will
+-- be filled in (and the schema likely revamped) once it is. Footnote
+-- markers (*1, #2, "ceremony roll?", etc.), section headers/counts, and
+-- unnamed "+1 / sig other" placeholder rows from the source doc were
+-- dropped since they aren't guests themselves.
 insert into guests (party_id, first_name, last_name, invited) values
-  ('00000000-0000-0000-0000-000000000001', 'Parker', 'Sexton', true),
-  ('00000000-0000-0000-0000-000000000001', 'Jolan', 'Motyka', true)
-on conflict do nothing;
+  (NULL, 'Elizabeth', 'Motyka', true),
+  (NULL, 'Tom', 'Motyka', true),
+  (NULL, 'Jolan', 'Motyka', true),
+  (NULL, 'Katie', 'Fields', true),
+  (NULL, 'Rob', 'Fields', true),
+  (NULL, 'Zoe', 'Fields', true),
+  (NULL, 'Zoe''s Boyfriend', '', true),
+  (NULL, 'Will', 'Field', true),
+  (NULL, 'Bella', 'Field', true),
+  (NULL, 'Chris', 'Gomba', true),
+  (NULL, 'Laura', 'Goff', true),
+  (NULL, 'Barbara', 'Motyka', true),
+  (NULL, 'Matt', 'Motyka', true),
+  (NULL, 'Karen', 'Motyka', true),
+  (NULL, 'Matt', 'Motyka Jr.', true),
+  (NULL, 'Eve', 'Motyka', true),
+  (NULL, 'Emily', 'Motyka', true),
+  (NULL, 'Mike', 'Motyka', true),
+  (NULL, 'Natalya', 'Brooks', true),
+  (NULL, 'Anna', 'Motyka', true),
+  (NULL, 'Rosie', 'Brooks', true),
+  (NULL, 'Raini', 'Brooks', true),
+  (NULL, 'Mike', 'Motyka', true),
+  (NULL, 'Alex', 'McLaughlin', true),
+  (NULL, 'Cole', 'McLaughlin', true),
+  (NULL, 'Hannah', 'Potthoff', true),
+  (NULL, 'Emma', 'Brody', true),
+  (NULL, 'Seth', 'Brody', true),
+  (NULL, 'Samantha', 'Meltzer Brody', true),
+  (NULL, 'Kathleen', 'Gray', true),
+  (NULL, 'Peter', 'Higgins', true),
+  (NULL, 'Megan', 'Higgins', true),
+  (NULL, 'Jack', '', true),
+  (NULL, 'Lisa', 'Selner', true),
+  (NULL, 'Amy', 'McCormack', true),
+  (NULL, 'Ralph', 'Ortiz', true),
+  (NULL, 'Julianna', '', true),
+  (NULL, 'Annika', '', true),
+  (NULL, 'Abby', '', true),
+  (NULL, 'Jason', '', true),
+  (NULL, 'Maya', '', true),
+  (NULL, 'Noelle', '', true),
+  (NULL, 'Eliana', '', true),
+  (NULL, 'Lola', '', true),
+  (NULL, 'Mark', 'DellaValle', true),
+  (NULL, 'Kate', 'Dunn', true),
+  (NULL, 'Cheryl', 'Yanuck', true),
+  (NULL, 'Sam', 'Yanuck', true),
+  (NULL, 'Amy', 'J', true),
+  (NULL, 'Chase', '', true),
+  (NULL, 'John', '', true),
+  (NULL, 'Lauren', 'Winslow', true),
+  (NULL, 'McKenly', 'Johson', true),
+  (NULL, 'Lizzette', 'Potthoff', true),
+  (NULL, 'Jochen', 'Wachter', true),
+  (NULL, 'Sören', 'Potthoff', true),
+  (NULL, 'Parker', 'Sexton', true),
+  (NULL, 'Janel', 'Sexton', true),
+  (NULL, 'Bryan', 'Sexton', true),
+  (NULL, 'Simon', 'Sexton', true),
+  (NULL, 'Cassidy', 'Sexton', true),
+  (NULL, 'Tatum', 'Sexton', true),
+  (NULL, 'Adam', 'Whiteman', true),
+  (NULL, 'Will', 'Wood', true),
+  (NULL, 'Madeline', '', true),
+  (NULL, 'Seth', '', true),
+  (NULL, 'Aiden', 'Barefoot', true),
+  (NULL, 'Kelly', 'May', true),
+  (NULL, 'John', 'Cord', true),
+  (NULL, 'Tammy', 'Seibert', true),
+  (NULL, 'Dale', 'Thompson', true),
+  (NULL, 'Renee', 'Sexton', true),
+  (NULL, 'John', 'Sexton', true),
+  (NULL, 'DeVita', 'Milo', true),
+  (NULL, 'Rich', 'Milo', true),
+  (NULL, 'Sydney', '', true),
+  (NULL, 'Max', '', true),
+  (NULL, 'Courtney', 'Higgins', true),
+  (NULL, 'Chris', 'Higgins', true),
+  (NULL, 'Chaselynn', '', true),
+  (NULL, 'Cameron', '', true),
+  (NULL, 'Griffin', 'Roupe', true),
+  (NULL, 'Amir', 'Safi', true),
+  (NULL, 'Joseph', 'McNicolas', true),
+  (NULL, 'Melea', '', true),
+  (NULL, 'Jim', 'Pearce', true),
+  (NULL, 'Jennie', 'Riley', true),
+  (NULL, 'Glenice', 'Fullwood', true),
+  (NULL, 'Andrew', 'Fullwood', true),
+  (NULL, 'Madeleine', 'Berenholtz', true),
+  (NULL, 'Anna', 'Goldseker', true),
+  (NULL, 'Roldolpho', '', true),
+  (NULL, 'Danielle', 'Latender', true),
+  (NULL, 'César', 'Moralez', true),
+  (NULL, 'Evi', '', true),
+  (NULL, 'Indi', '', true),
+  (NULL, 'Zara', '', true),
+  (NULL, 'Marsha', 'Rutz', true),
+  (NULL, 'Darryl', 'Rutz', true),
+  (NULL, 'Stacia', 'Baxley', true),
+  (NULL, 'Renee', 'Schwendimar', true),
+  (NULL, 'Victoria', 'Schwendimar', true),
+  (NULL, 'Judy', 'Seagal', true),
+  (NULL, 'Noah', '', true),
+  (NULL, 'Roan', '', true),
+  (NULL, 'Nathan', 'Pearce', true),
+  (NULL, 'Will', '', true),
+  (NULL, 'Leah', '', true),
+  (NULL, 'Chris', 'Blobe', true),
+  (NULL, 'Chantal', '', true),
+  (NULL, 'Kienan', '', true),
+  (NULL, 'Emma', 'Norris', true),
+  (NULL, 'Kevin', 'Higgins', true),
+  (NULL, 'Suzy', '', true),
+  (NULL, 'Liz', '', true),
+  (NULL, 'Lucy', 'Vandk', true),
+  (NULL, 'Fran', 'Vdk', true),
+  (NULL, 'Joel', 'VDK', true),
+  (NULL, 'McKinley', '', true);
+
+-- Local dev smoke-test fixture: every real guest above is intentionally
+-- imported with party_id = NULL (see migration 0003) since the actual party
+-- groupings aren't decided yet. Because search_guests inner-joins to
+-- parties, none of those rows are reachable through the RSVP search yet —
+-- that's expected, not a bug. This fixture party gives the RSVP flow
+-- (search -> party -> submit) something real to exercise locally. Safe to
+-- delete once real parties/guests are assigned.
+with test_party as (
+  insert into parties (party_name, notes) values ('Test Party', 'Local dev fixture — safe to delete')
+  returning id
+)
+insert into guests (party_id, first_name, last_name, invited, food_preference)
+select id, 'Test', 'Guest', true, null from test_party
+union all
+select id, 'Sample', 'Plusone', true, 'Vegetarian' from test_party;
