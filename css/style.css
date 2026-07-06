@@ -484,6 +484,10 @@ section {
   margin-top: var(--space-md);
 }
 
+.rsvp-cta {
+  text-align: center;
+}
+
 .two-col {
   display: grid;
   grid-template-columns: 1fr 1fr;

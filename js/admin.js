@@ -1,5 +1,6 @@
 import { supabase } from './supabase-client.js';
 import { buildPieCard, buildMeterCard } from './charts.js';
+import { escapeHtml } from './escape.js';
 
 const loginSection = document.getElementById('admin-login');
 const dashboardSection = document.getElementById('admin-dashboard');
@@ -165,7 +166,7 @@ async function loadParties() {
     return;
   }
   newGuestPartySelect.innerHTML = data
-    .map((p) => `<option value="${p.id}">${p.party_name}</option>`)
+    .map((p) => `<option value="${p.id}">${escapeHtml(p.party_name)}</option>`)
     .join('');
   return data;
 }
@@ -205,20 +206,20 @@ function buildGuestRow(guest) {
 
   tr.innerHTML = `
     <td class="admin-table__id" title="${guest.id}">${guest.id.slice(0, 8)}</td>
-    <td>${guest.parties?.party_name ?? ''}</td>
-    <td>${guest.first_name}</td>
-    <td>${guest.last_name}</td>
+    <td>${escapeHtml(guest.parties?.party_name)}</td>
+    <td>${escapeHtml(guest.first_name)}</td>
+    <td>${escapeHtml(guest.last_name)}</td>
     <td><input type="checkbox" class="field-invited" ${guest.invited ? 'checked' : ''}></td>
     <td><select class="field-rsvp">${rsvpOptions}</select></td>
     <td><select class="field-food">${foodOptions}</select></td>
-    <td><input type="text" class="field-dietary" value="${guest.dietary_notes ?? ''}"></td>
-    <td><input type="text" class="field-address1" value="${guest.address_line1 ?? ''}"></td>
-    <td><input type="text" class="field-address2" value="${guest.address_line2 ?? ''}"></td>
-    <td><input type="text" class="field-city" value="${guest.city ?? ''}"></td>
-    <td><input type="text" class="field-state" value="${guest.state_province ?? ''}"></td>
-    <td><input type="text" class="field-postal" value="${guest.postal_code ?? ''}"></td>
-    <td><input type="text" class="field-country" value="${guest.country ?? ''}"></td>
-    <td><input type="text" class="field-extra" value='${extraJson.replace(/'/g, '&#39;')}'></td>
+    <td><input type="text" class="field-dietary" value="${escapeHtml(guest.dietary_notes)}"></td>
+    <td><input type="text" class="field-address1" value="${escapeHtml(guest.address_line1)}"></td>
+    <td><input type="text" class="field-address2" value="${escapeHtml(guest.address_line2)}"></td>
+    <td><input type="text" class="field-city" value="${escapeHtml(guest.city)}"></td>
+    <td><input type="text" class="field-state" value="${escapeHtml(guest.state_province)}"></td>
+    <td><input type="text" class="field-postal" value="${escapeHtml(guest.postal_code)}"></td>
+    <td><input type="text" class="field-country" value="${escapeHtml(guest.country)}"></td>
+    <td><input type="text" class="field-extra" value="${escapeHtml(extraJson)}"></td>
     <td>${formatTimestamp(guest.responded_at)}</td>
     <td>${formatTimestamp(guest.created_at)}</td>
     <td><button type="button" class="admin-delete">Delete</button></td>
@@ -270,7 +271,14 @@ function buildGuestRow(guest) {
 
 async function updateGuest(id, fields) {
   const { error } = await supabase.from('guests').update(fields).eq('id', id);
-  if (error) console.error(error);
+  if (error) {
+    console.error(error);
+    alert(`Saving that change failed: ${error.message}`);
+    // Re-render the table so the cell shows what's actually stored, not the
+    // edit that didn't stick.
+    await Promise.all([loadStats(), loadGuests()]);
+    return;
+  }
   await loadStats();
 }
 

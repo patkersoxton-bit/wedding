@@ -1,4 +1,5 @@
 import { supabase } from './supabase-client.js';
+import { escapeHtml } from './escape.js';
 
 const searchInput = document.getElementById('search-input');
 const searchResults = document.getElementById('search-results');
@@ -38,7 +39,7 @@ async function runSearch(term) {
     const button = document.createElement('button');
     button.type = 'button';
     button.className = 'rsvp-result';
-    button.innerHTML = `<span>${guest.first_name} ${guest.last_name}</span><span class="rsvp-result__party">${guest.party_name}</span>`;
+    button.innerHTML = `<span>${escapeHtml(guest.first_name)} ${escapeHtml(guest.last_name)}</span><span class="rsvp-result__party">${escapeHtml(guest.party_name)}</span>`;
     button.addEventListener('click', () => selectParty(guest.party_id, guest.party_name));
     li.appendChild(button);
     searchResults.appendChild(li);
@@ -74,7 +75,7 @@ function buildMemberRow(member) {
   ).join('');
 
   wrap.innerHTML = `
-    <div class="rsvp-member__name">${member.first_name} ${member.last_name}</div>
+    <div class="rsvp-member__name">${escapeHtml(member.first_name)} ${escapeHtml(member.last_name)}</div>
     <div class="rsvp-member__attending">
       <label><input type="radio" name="attending-${member.guest_id}" value="yes" ${member.rsvp_status === 'yes' ? 'checked' : ''}> Joyfully attending</label>
       <label><input type="radio" name="attending-${member.guest_id}" value="no" ${member.rsvp_status === 'no' ? 'checked' : ''}> Regretfully declines</label>
@@ -87,7 +88,7 @@ function buildMemberRow(member) {
         </select>
       </label>
       <label>Dietary notes
-        <input type="text" name="dietary-${member.guest_id}" value="${member.dietary_notes ?? ''}" placeholder="Allergies, restrictions, etc.">
+        <input type="text" name="dietary-${member.guest_id}" value="${escapeHtml(member.dietary_notes)}" placeholder="Allergies, restrictions, etc.">
       </label>
     </div>
   `;

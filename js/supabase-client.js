@@ -1,7 +1,7 @@
 // Shared Supabase client. Local prototype credentials for now — swap these
 // for the hosted project's URL/anon key before going live (both are safe to
 // expose client-side; write access is enforced by RLS + the RPCs in
-// sql/schema.sql, not by keeping this key secret).
+// supabase/migrations/, not by keeping this key secret).
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const SUPABASE_URL = 'http://127.0.0.1:54321';

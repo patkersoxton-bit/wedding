@@ -49,10 +49,14 @@ and RSVP data outright instead of handing it to a third party.
 ├── js/
 │   ├── main.js          # interactions, scroll effects, Zola embed init if needed
 │   ├── supabase-client.js  # shared Supabase client init (URL + anon key)
+│   ├── escape.js        # escapeHtml() — required for any DB value rendered via innerHTML
 │   ├── rsvp.js          # rsvp.html logic (search, party lookup, submit)
-│   └── admin.js         # admin.html logic (auth, stats, CRUD, CSV export)
-├── sql/
-│   └── schema.sql       # Supabase schema: tables, RLS policies, RPC functions
+│   ├── admin.js         # admin.html logic (auth, stats, CRUD, CSV export)
+│   └── charts.js        # hand-rolled SVG pie/meter charts for the dashboard
+├── supabase/
+│   ├── config.toml      # Supabase CLI local-dev config
+│   ├── migrations/      # schema: tables, RLS policies, RPC functions (0001_init.sql, …)
+│   └── seed.sql         # local prototype seed data
 ├── assets/
 │   ├── images/
 │   │   └── inspiration/  # reference screenshots/mockups driving the design
@@ -73,7 +77,7 @@ through restricted Postgres RPC functions (`SECURITY DEFINER`), never raw
 table `SELECT`/`UPDATE`. RLS on the tables themselves stays deny-by-default
 for the anon role; only authenticated admin users get direct table access.
 
-**Data model** (`sql/schema.sql`)
+**Data model** (`supabase/migrations/`)
 - `parties` — `id`, `party_name`, `notes`
 - `guests` — `id`, `party_id` (FK), `first_name`, `last_name`, `invited` (bool
   — a party can have members not invited to this event), address fields,
@@ -158,7 +162,8 @@ sections.
 
 - **Full guest field list**: address, food preference, and RSVP y/n are
   confirmed; remaining fields (e.g. plus-ones, song requests, table
-  assignment) still need to be enumerated before finalizing `sql/schema.sql`.
+  assignment) still need to be enumerated before finalizing the schema
+  migrations in `supabase/migrations/`.
 - **Zola CSV export format**: the exact column mapping Zola expects for guest
   list import is unknown until the Zola account/page exists to check against.
 - **Admin users**: who beyond Parker and Jolan gets a Supabase Auth login to
@@ -176,6 +181,12 @@ sections.
   Zola's job. Zola is only for the registry.
 - Never grant the anon/public Supabase role direct table access to `guests`
   or `parties` — guest-facing reads/writes must go through the RPC functions
-  in `sql/schema.sql` so guests can't see or edit data outside their own party.
+  in `supabase/migrations/` so guests can't see or edit data outside their
+  own party.
+- Any database value rendered through `innerHTML` must pass through
+  `escapeHtml()` (`js/escape.js`). Guests can write `dietary_notes` and
+  `food_preference` through the public RPC, and those values are rendered in
+  the authenticated admin dashboard — unescaped interpolation there is a
+  stored-XSS vector, not just a rendering glitch.
 - When adding new sections/pages, match the existing theme variables in
   `css/style.css` rather than introducing new ad hoc colors/fonts.
