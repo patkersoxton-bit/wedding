@@ -43,48 +43,70 @@
           <h2>Planner Dashboard</h2>
         </div>
 
-        <div class="admin-stats" id="admin-stats"></div>
-
-        <div class="admin-panel">
-          <h3>Add Party</h3>
-          <form id="add-party-form" class="admin-inline-form">
-            <input type="text" id="new-party-name" placeholder="Party name (e.g. The Motyka Family)" required>
-            <button type="submit" class="btn btn--outline">Add Party</button>
-          </form>
+        <div class="admin-tabs" role="tablist">
+          <button type="button" class="admin-tab is-active" data-tab="overview" role="tab" aria-selected="true">Overview</button>
+          <button type="button" class="admin-tab" data-tab="database" role="tab" aria-selected="false">Guest Database</button>
         </div>
 
-        <div class="admin-panel">
-          <h3>Add Guest</h3>
-          <form id="add-guest-form" class="admin-inline-form">
-            <select id="new-guest-party" required></select>
-            <input type="text" id="new-guest-first" placeholder="First name" required>
-            <input type="text" id="new-guest-last" placeholder="Last name" required>
-            <label><input type="checkbox" id="new-guest-invited" checked> Invited</label>
-            <button type="submit" class="btn btn--outline">Add Guest</button>
-          </form>
+        <div id="tab-overview" class="admin-tab-panel">
+          <div class="admin-stats" id="admin-stats"></div>
+
+          <div class="chart-row" id="chart-row"></div>
         </div>
 
-        <div class="admin-panel">
-          <div class="admin-panel__header">
-            <h3>Guest List</h3>
-            <button id="export-csv" class="btn btn--outline" type="button">Export CSV (Zola format)</button>
+        <div id="tab-database" class="admin-tab-panel" hidden>
+          <div class="admin-panel">
+            <h3>Add Party</h3>
+            <form id="add-party-form" class="admin-inline-form">
+              <input type="text" id="new-party-name" placeholder="Party name (e.g. The Motyka Family)" required>
+              <button type="submit" class="btn btn--outline">Add Party</button>
+            </form>
           </div>
-          <div class="admin-table-wrap">
-            <table class="admin-table" id="guest-table">
-              <thead>
-                <tr>
-                  <th>Party</th>
-                  <th>First</th>
-                  <th>Last</th>
-                  <th>Invited</th>
-                  <th>RSVP</th>
-                  <th>Meal</th>
-                  <th>Dietary Notes</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody id="guest-table-body"></tbody>
-            </table>
+
+          <div class="admin-panel">
+            <h3>Add Guest</h3>
+            <form id="add-guest-form" class="admin-inline-form">
+              <select id="new-guest-party" required></select>
+              <input type="text" id="new-guest-first" placeholder="First name" required>
+              <input type="text" id="new-guest-last" placeholder="Last name" required>
+              <label><input type="checkbox" id="new-guest-invited" checked> Invited</label>
+              <button type="submit" class="btn btn--outline">Add Guest</button>
+            </form>
+          </div>
+
+          <div class="admin-panel">
+            <div class="admin-panel__header">
+              <h3>Guest Database</h3>
+              <p class="rsvp-hint" style="margin: 0;">Every field stored per guest — edit any cell directly, or delete a row.</p>
+              <button id="export-csv" class="btn btn--outline" type="button">Export CSV (Zola format)</button>
+            </div>
+            <div class="admin-table-wrap">
+              <table class="admin-table" id="guest-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Party</th>
+                    <th>First</th>
+                    <th>Last</th>
+                    <th>Invited</th>
+                    <th>RSVP</th>
+                    <th>Meal</th>
+                    <th>Dietary Notes</th>
+                    <th>Address 1</th>
+                    <th>Address 2</th>
+                    <th>City</th>
+                    <th>State</th>
+                    <th>Postal</th>
+                    <th>Country</th>
+                    <th>Extra (JSON)</th>
+                    <th>Responded</th>
+                    <th>Created</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="guest-table-body"></tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>

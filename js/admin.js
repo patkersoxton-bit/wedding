@@ -1,4 +1,5 @@
 import { supabase } from './supabase-client.js';
+import { buildPieCard, buildMeterCard } from './charts.js';
 
 const loginSection = document.getElementById('admin-login');
 const dashboardSection = document.getElementById('admin-dashboard');
@@ -6,14 +7,40 @@ const loginForm = document.getElementById('login-form');
 const loginError = document.getElementById('login-error');
 const logoutLink = document.getElementById('logout-link');
 const statsEl = document.getElementById('admin-stats');
+const chartRow = document.getElementById('chart-row');
 const guestTableBody = document.getElementById('guest-table-body');
 const addPartyForm = document.getElementById('add-party-form');
 const addGuestForm = document.getElementById('add-guest-form');
 const newGuestPartySelect = document.getElementById('new-guest-party');
 const exportBtn = document.getElementById('export-csv');
+const tabButtons = document.querySelectorAll('.admin-tab');
 
 const FOOD_OPTIONS = ['', 'Chicken', 'Beef', 'Fish', 'Vegetarian'];
 const RSVP_OPTIONS = ['pending', 'yes', 'no'];
+
+// Deepened, CVD-validated variants of the site's brand hues — the soft
+// pastel theme palette fails the categorical contrast/chroma checks for
+// small chart marks. Order is fixed per chart; never reassigned by value.
+const CHART_COLORS = {
+  red: '#ef5356', // copper (brand primary, unchanged)
+  orange: '#d97a3c', // apricot, deepened
+  amber: '#c9861d', // golden hour, deepened
+  green: '#75731f', // moss, deepened
+  blue: '#3f6bb0', // misty blue, deepened
+  gray: '#a49c92', // muted "none/not selected"
+};
+
+tabButtons.forEach((btn) => {
+  btn.addEventListener('click', () => {
+    tabButtons.forEach((b) => {
+      b.classList.toggle('is-active', b === btn);
+      b.setAttribute('aria-selected', b === btn ? 'true' : 'false');
+    });
+    document.querySelectorAll('.admin-tab-panel').forEach((panel) => {
+      panel.hidden = panel.id !== `tab-${btn.dataset.tab}`;
+    });
+  });
+});
 
 // Single shared master-password login for testing — this is one fixed
 // Supabase Auth account behind the scenes (RLS grants full access to any
@@ -63,7 +90,7 @@ logoutLink.addEventListener('click', async (e) => {
 });
 
 async function loadStats() {
-  const { data, error } = await supabase.from('guests').select('rsvp_status, invited');
+  const { data, error } = await supabase.from('guests').select('rsvp_status, invited, food_preference');
   if (error) {
     console.error(error);
     return;
@@ -79,6 +106,56 @@ async function loadStats() {
     <div class="detail-card"><h3>${no}</h3><p>Declined</p></div>
     <div class="detail-card"><h3>${pending}</h3><p>Awaiting response</p></div>
   `;
+
+  renderCharts(invited, yes, no, pending);
+}
+
+function renderCharts(invited, yes, no, pending) {
+  chartRow.innerHTML = '';
+
+  chartRow.appendChild(
+    buildPieCard({
+      title: 'RSVP Responses',
+      slices: [
+        { label: 'Attending', value: yes, color: CHART_COLORS.green },
+        { label: 'Declined', value: no, color: CHART_COLORS.red },
+        { label: 'Awaiting response', value: pending, color: CHART_COLORS.blue },
+      ],
+    })
+  );
+
+  const mealCounts = { Chicken: 0, Beef: 0, Fish: 0, Vegetarian: 0 };
+  let noMeal = 0;
+  invited.forEach((g) => {
+    if (g.food_preference && mealCounts.hasOwnProperty(g.food_preference)) {
+      mealCounts[g.food_preference] += 1;
+    } else {
+      noMeal += 1;
+    }
+  });
+
+  chartRow.appendChild(
+    buildPieCard({
+      title: 'Meal Preference',
+      slices: [
+        { label: 'Chicken', value: mealCounts.Chicken, color: CHART_COLORS.red },
+        { label: 'Beef', value: mealCounts.Beef, color: CHART_COLORS.orange },
+        { label: 'Fish', value: mealCounts.Fish, color: CHART_COLORS.blue },
+        { label: 'Vegetarian', value: mealCounts.Vegetarian, color: CHART_COLORS.green },
+        { label: 'Not selected', value: noMeal, color: CHART_COLORS.gray },
+      ],
+    })
+  );
+
+  chartRow.appendChild(
+    buildMeterCard({
+      title: 'Response Rate',
+      value: yes + no,
+      total: invited.length,
+      color: CHART_COLORS.red,
+      trackColor: '#f2e3da',
+    })
+  );
 }
 
 async function loadParties() {
@@ -96,7 +173,7 @@ async function loadParties() {
 async function loadGuests() {
   const { data, error } = await supabase
     .from('guests')
-    .select('id, first_name, last_name, invited, rsvp_status, food_preference, dietary_notes, parties(party_name)')
+    .select('*, parties(party_name)')
     .order('last_name');
   if (error) {
     console.error(error);
@@ -109,6 +186,11 @@ async function loadGuests() {
   }
 }
 
+function formatTimestamp(value) {
+  if (!value) return '—';
+  return new Date(value).toLocaleString();
+}
+
 function buildGuestRow(guest) {
   const tr = document.createElement('tr');
   tr.dataset.guestId = guest.id;
@@ -119,8 +201,10 @@ function buildGuestRow(guest) {
   const rsvpOptions = RSVP_OPTIONS.map(
     (opt) => `<option value="${opt}" ${guest.rsvp_status === opt ? 'selected' : ''}>${opt}</option>`
   ).join('');
+  const extraJson = JSON.stringify(guest.extra ?? {});
 
   tr.innerHTML = `
+    <td class="admin-table__id" title="${guest.id}">${guest.id.slice(0, 8)}</td>
     <td>${guest.parties?.party_name ?? ''}</td>
     <td>${guest.first_name}</td>
     <td>${guest.last_name}</td>
@@ -128,6 +212,15 @@ function buildGuestRow(guest) {
     <td><select class="field-rsvp">${rsvpOptions}</select></td>
     <td><select class="field-food">${foodOptions}</select></td>
     <td><input type="text" class="field-dietary" value="${guest.dietary_notes ?? ''}"></td>
+    <td><input type="text" class="field-address1" value="${guest.address_line1 ?? ''}"></td>
+    <td><input type="text" class="field-address2" value="${guest.address_line2 ?? ''}"></td>
+    <td><input type="text" class="field-city" value="${guest.city ?? ''}"></td>
+    <td><input type="text" class="field-state" value="${guest.state_province ?? ''}"></td>
+    <td><input type="text" class="field-postal" value="${guest.postal_code ?? ''}"></td>
+    <td><input type="text" class="field-country" value="${guest.country ?? ''}"></td>
+    <td><input type="text" class="field-extra" value='${extraJson.replace(/'/g, '&#39;')}'></td>
+    <td>${formatTimestamp(guest.responded_at)}</td>
+    <td>${formatTimestamp(guest.created_at)}</td>
     <td><button type="button" class="admin-delete">Delete</button></td>
   `;
 
@@ -143,6 +236,33 @@ function buildGuestRow(guest) {
   tr.querySelector('.field-dietary').addEventListener('change', (e) =>
     updateGuest(guest.id, { dietary_notes: e.target.value || null })
   );
+  tr.querySelector('.field-address1').addEventListener('change', (e) =>
+    updateGuest(guest.id, { address_line1: e.target.value || null })
+  );
+  tr.querySelector('.field-address2').addEventListener('change', (e) =>
+    updateGuest(guest.id, { address_line2: e.target.value || null })
+  );
+  tr.querySelector('.field-city').addEventListener('change', (e) =>
+    updateGuest(guest.id, { city: e.target.value || null })
+  );
+  tr.querySelector('.field-state').addEventListener('change', (e) =>
+    updateGuest(guest.id, { state_province: e.target.value || null })
+  );
+  tr.querySelector('.field-postal').addEventListener('change', (e) =>
+    updateGuest(guest.id, { postal_code: e.target.value || null })
+  );
+  tr.querySelector('.field-country').addEventListener('change', (e) =>
+    updateGuest(guest.id, { country: e.target.value || null })
+  );
+  tr.querySelector('.field-extra').addEventListener('change', (e) => {
+    try {
+      const parsed = JSON.parse(e.target.value || '{}');
+      updateGuest(guest.id, { extra: parsed });
+    } catch {
+      alert('Extra field must be valid JSON, e.g. {"plus_one": true}');
+      e.target.value = extraJson;
+    }
+  });
   tr.querySelector('.admin-delete').addEventListener('click', () => deleteGuest(guest.id));
 
   return tr;
