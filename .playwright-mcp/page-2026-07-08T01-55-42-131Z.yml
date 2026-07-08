@@ -1,0 +1,37 @@
+- generic [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e3]:
+      - link "P & J" [ref=e4] [cursor=pointer]:
+        - /url: index.html
+      - list [ref=e5]:
+        - listitem [ref=e6]:
+          - link "Our Story" [ref=e7] [cursor=pointer]:
+            - /url: index.html#story
+        - listitem [ref=e8]:
+          - link "Details" [ref=e9] [cursor=pointer]:
+            - /url: index.html#details
+        - listitem [ref=e10]:
+          - link "RSVP" [ref=e11] [cursor=pointer]:
+            - /url: rsvp.html
+        - listitem [ref=e12]:
+          - link "Registry" [ref=e13] [cursor=pointer]:
+            - /url: index.html#registry
+  - generic [ref=e15]:
+    - generic [ref=e16]:
+      - generic [ref=e17]: Let us know
+      - img [ref=e19]
+      - heading "RSVP" [level=2] [ref=e37]
+      - paragraph [ref=e38]: Search for your name to find your party and let us know if you'll be joining us.
+    - generic [ref=e39]:
+      - generic [ref=e40]: Find your invitation
+      - textbox "Find your invitation" [active] [ref=e42]:
+        - /placeholder: Type your first or last name…
+        - text: Test
+      - list [ref=e46]:
+        - listitem [ref=e47]:
+          - button "Test Guest Test Party" [ref=e48] [cursor=pointer]:
+            - generic [ref=e49]: Test Guest
+            - generic [ref=e50]: Test Party
+  - contentinfo [ref=e43]:
+    - generic [ref=e44]: Parker & Jolan
+    - paragraph [ref=e45]: May 27, 2028 · parkerandjolan.com

@@ -1,0 +1,128 @@
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e3]:
+      - link "P & J" [ref=e4] [cursor=pointer]:
+        - /url: "#"
+      - list [ref=e5]:
+        - listitem [ref=e6]:
+          - link "Our Story" [ref=e7] [cursor=pointer]:
+            - /url: "#story"
+        - listitem [ref=e8]:
+          - link "Details" [ref=e9] [cursor=pointer]:
+            - /url: "#details"
+        - listitem [ref=e10]:
+          - link "Gallery" [ref=e11] [cursor=pointer]:
+            - /url: "#gallery"
+        - listitem [ref=e12]:
+          - link "RSVP" [ref=e13] [cursor=pointer]:
+            - /url: rsvp.html
+        - listitem [ref=e14]:
+          - link "Registry" [ref=e15] [cursor=pointer]:
+            - /url: "#registry"
+  - banner [ref=e16]:
+    - generic [ref=e18]:
+      - generic [ref=e19]:
+        - img
+        - text: We're getting married
+      - heading "Parker & Jolan" [level=1] [ref=e20]
+      - paragraph [ref=e21]: May 27, 2028 · Glacier National Park, MT
+      - generic [ref=e22]:
+        - generic [ref=e23]:
+          - generic [ref=e24]: "689"
+          - text: Days
+        - generic [ref=e25]:
+          - generic [ref=e26]: "17"
+          - text: Hours
+        - generic [ref=e27]:
+          - generic [ref=e28]: "14"
+          - text: Mins
+        - generic [ref=e29]:
+          - generic [ref=e30]: "36"
+          - text: Secs
+    - generic [ref=e31]: ↓
+  - generic [ref=e32]:
+    - img
+    - generic [ref=e33]:
+      - generic [ref=e34]:
+        - generic [ref=e35]: How it happened
+        - img [ref=e37]
+        - heading "Our Story" [level=2] [ref=e55]
+      - generic [ref=e56]:
+        - generic [ref=e57]:
+          - img [ref=e58]
+          - img "Parker and Jolan cheek to cheek, laughing, by the lake" [ref=e72]
+        - generic [ref=e73]:
+          - heading "The Proposal" [level=3] [ref=e74]
+          - paragraph [ref=e75]: On the shore of Lake McDonald in Glacier National Park, with the mountains catching the last light of the day, Parker got down on one knee — and Jolan said yes.
+          - paragraph [ref=e76]:
+            - emphasis [ref=e77]: "[Add your full story here: how you met, your favorite memories, and what led to this moment. Replace this placeholder copy with the real version.]"
+  - generic [ref=e78]:
+    - img
+    - img
+    - generic [ref=e79]:
+      - generic [ref=e80]:
+        - generic [ref=e81]: Save the date
+        - img [ref=e83]
+        - heading "Wedding Details" [level=2] [ref=e101]
+        - paragraph [ref=e102]: All the info you need for our big day — updated as plans come together.
+      - generic [ref=e103]:
+        - generic [ref=e104]:
+          - generic [ref=e105]: 💐
+          - heading "Ceremony" [level=3] [ref=e106]
+          - paragraph [ref=e107]: "[Venue name]"
+          - paragraph [ref=e108]: "[Date & time]"
+        - generic [ref=e109]:
+          - generic [ref=e110]: 🥂
+          - heading "Reception" [level=3] [ref=e111]
+          - paragraph [ref=e112]: "[Venue name]"
+          - paragraph [ref=e113]: "[Date & time]"
+        - generic [ref=e114]:
+          - generic [ref=e115]: 🧳
+          - heading "Travel & Stay" [level=3] [ref=e116]
+          - paragraph [ref=e117]: "[Hotel block / travel notes]"
+        - generic [ref=e118]:
+          - generic [ref=e119]: 🌼
+          - heading "Dress Code" [level=3] [ref=e120]
+          - paragraph [ref=e121]: "[Attire, e.g. Garden Formal]"
+  - generic [ref=e123]:
+    - generic [ref=e124]:
+      - generic [ref=e125]: A few favorites
+      - img [ref=e127]
+      - heading "Gallery" [level=2] [ref=e145]
+    - generic [ref=e146]:
+      - img "Parker proposing on the shore of Lake McDonald" [ref=e148]
+      - img "Jolan looking down at her new ring, laughing" [ref=e150]
+      - img "Parker and Jolan embracing, laughing" [ref=e152]
+      - img "Jolan covering her mouth in happy surprise" [ref=e154]
+      - img "Parker and Jolan smiling at each other in the sunset glow" [ref=e156]
+      - img "Jolan resting her head on Parker's shoulder" [ref=e158]
+      - img "Parker and Jolan by the lakeshore" [ref=e160]
+      - img "Parker and Jolan sharing a kiss after the proposal" [ref=e162]
+      - img "Parker and Jolan walking hand in hand along the shore" [ref=e164]
+  - generic [ref=e165]:
+    - img
+    - generic [ref=e166]:
+      - generic [ref=e167]:
+        - generic [ref=e168]: Let us know
+        - img [ref=e170]
+        - heading "RSVP" [level=2] [ref=e188]
+        - paragraph [ref=e189]: Please respond by [RSVP deadline]. Search for your name, find your party, and let us know who's coming — it only takes a minute.
+      - generic [ref=e191]:
+        - generic [ref=e192]: Come celebrate with us!
+        - link "Find Your Invitation" [ref=e193] [cursor=pointer]:
+          - /url: rsvp.html
+  - generic [ref=e196]:
+    - paragraph [ref=e198]:
+      - text: Zola Registry widget goes here.
+      - text: Replace this card with Zola's registry embed snippet.
+    - generic [ref=e199]:
+      - generic [ref=e200]:
+        - generic [ref=e201]: Feeling generous?
+        - heading "Registry" [level=2] [ref=e202]
+        - paragraph [ref=e203]: Your presence is the real gift — but if you'd like to spoil us, our registry is on Zola.
+      - link "View Registry" [ref=e204] [cursor=pointer]:
+        - /url: "#"
+  - contentinfo [ref=e205]:
+    - img [ref=e207]
+    - generic [ref=e225]: Parker & Jolan
+    - paragraph [ref=e226]: May 27, 2028 · parkerandjolan.com

@@ -146,6 +146,20 @@ Floral accents on the site (section-heading flourishes, the corner bloom
 behind the Our Story photo) are original hand-drawn inline SVGs built from
 this palette — not traced from or copies of the Pinterest photos.
 
+Beyond the palette, the site's graphic language comes from two specific
+references in `Theme/Pinterest_files/`:
+`0b0446e046fc81b53ae8267efcd6a753.jpg` (doodle-covered invitation: wavy
+border frame, hatched-tick oval badge, scattered hand-drawn doodles) and
+`d844ca7d57113572487b0a1d55f5eaa4_002.jpg` (golden wavy-edged bar sign with
+copper border and script lettering). Implemented as: the hero eyebrow's
+hatched oval (`.hero__eyebrow-oval`), wavy-edged sign cards (`.detail-card`,
+`.rsvp-sign` — a stretched SVG background, `100% 100%`, drawn per accent
+color; note plain `border-image` left tiling artifacts in Chrome, hence the
+background approach), wavy section-edge transitions (`.hero::after`, the
+homepage `.site-footer::before`), and scattered `.doodle` SVGs (tulip,
+daisy, sprig, toasting glasses — original artwork, hidden under 900px).
+Reuse these motifs (not new ad hoc ones) when adding pages or sections.
+
 Fonts: a hand-lettered script for the couple's names/big display text (echoing
 the Pinterest board's hand-drawn signage), a serif for section headings, and a
 clean rounded sans for body copy. Loaded via Google Fonts `<link>` tag (no

@@ -1,0 +1,77 @@
+- generic [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e3]:
+      - link "P & J" [ref=e4] [cursor=pointer]:
+        - /url: index.html
+      - list [ref=e5]:
+        - listitem [ref=e6]:
+          - link "Our Story" [ref=e7] [cursor=pointer]:
+            - /url: index.html#story
+        - listitem [ref=e8]:
+          - link "Details" [ref=e9] [cursor=pointer]:
+            - /url: index.html#details
+        - listitem [ref=e10]:
+          - link "RSVP" [ref=e11] [cursor=pointer]:
+            - /url: rsvp.html
+        - listitem [ref=e12]:
+          - link "Registry" [ref=e13] [cursor=pointer]:
+            - /url: index.html#registry
+  - generic [ref=e15]:
+    - generic [ref=e16]:
+      - generic [ref=e17]: Let us know
+      - img [ref=e19]
+      - heading "RSVP" [level=2] [ref=e37]
+      - paragraph [ref=e38]: Search for your name to find your party and let us know if you'll be joining us.
+    - generic [ref=e51]:
+      - button "← Not your party? Search again" [ref=e52] [cursor=pointer]
+      - heading "Test Party" [level=3] [ref=e53]
+      - generic [ref=e54]:
+        - generic [ref=e55]:
+          - generic [ref=e56]:
+            - generic [ref=e57]: Test Guest
+            - generic [ref=e58]:
+              - generic [ref=e59]:
+                - radio "Joyfully attending" [checked] [active] [ref=e60]
+                - text: Joyfully attending
+              - generic [ref=e61]:
+                - radio "Regretfully declines" [ref=e62]
+                - text: Regretfully declines
+            - generic [ref=e63]:
+              - generic [ref=e64]:
+                - text: Meal preference
+                - combobox "Meal preference" [ref=e65]:
+                  - option "Select…" [selected]
+                  - option "Chicken"
+                  - option "Beef"
+                  - option "Fish"
+                  - option "Vegetarian"
+              - generic [ref=e66]:
+                - text: Dietary notes
+                - textbox "Dietary notes" [ref=e67]:
+                  - /placeholder: Allergies, restrictions, etc.
+          - generic [ref=e68]:
+            - generic [ref=e69]: Sample Plusone
+            - generic [ref=e70]:
+              - generic [ref=e71]:
+                - radio "Joyfully attending" [ref=e72]
+                - text: Joyfully attending
+              - generic [ref=e73]:
+                - radio "Regretfully declines" [ref=e74]
+                - text: Regretfully declines
+            - generic [ref=e75]:
+              - generic [ref=e76]:
+                - text: Meal preference
+                - combobox "Meal preference" [ref=e77]:
+                  - option "Select…"
+                  - option "Chicken"
+                  - option "Beef"
+                  - option "Fish"
+                  - option "Vegetarian" [selected]
+              - generic [ref=e78]:
+                - text: Dietary notes
+                - textbox "Dietary notes" [ref=e79]:
+                  - /placeholder: Allergies, restrictions, etc.
+        - button "Submit RSVP" [ref=e80] [cursor=pointer]
+  - contentinfo [ref=e43]:
+    - generic [ref=e44]: Parker & Jolan
+    - paragraph [ref=e45]: May 27, 2028 · parkerandjolan.com

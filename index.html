@@ -32,7 +32,12 @@
   <header class="hero">
     <div class="hero__bg"></div>
     <div class="hero__content">
-      <span class="hero__eyebrow">We're getting married</span>
+      <span class="hero__eyebrow">
+        <svg class="hero__eyebrow-oval" viewBox="0 0 260 74" preserveAspectRatio="none" aria-hidden="true">
+          <ellipse cx="130" cy="37" rx="120" ry="28" fill="none" stroke="var(--blush)" stroke-width="6" stroke-dasharray="2.5 6.5" opacity="0.9"/>
+        </svg>
+        We're getting married
+      </span>
       <h1 class="hero__names">Parker <span class="amp">&amp;</span> Jolan</h1>
       <p class="hero__date">May 27, 2028 &middot; Glacier National Park, MT</p>
 
@@ -59,6 +64,16 @@
   </header>
 
   <section id="story" class="story">
+    <svg class="doodle doodle--sprig" viewBox="0 0 70 100" fill="none" aria-hidden="true">
+      <path d="M35 96 C33 70 34 40 44 8" stroke="var(--moss)" stroke-width="3.5" stroke-linecap="round"/>
+      <g fill="var(--moss-light)">
+        <ellipse cx="24" cy="70" rx="12" ry="5" transform="rotate(-30 24 70)"/>
+        <ellipse cx="47" cy="60" rx="12" ry="5" transform="rotate(20 47 60)"/>
+        <ellipse cx="24" cy="46" rx="12" ry="5" transform="rotate(-35 24 46)"/>
+        <ellipse cx="50" cy="34" rx="12" ry="5" transform="rotate(15 50 34)"/>
+        <ellipse cx="30" cy="22" rx="11" ry="5" transform="rotate(-40 30 22)"/>
+      </g>
+    </svg>
     <div class="container">
       <div class="section-heading reveal">
         <span class="section-heading__eyebrow">How it happened</span>
@@ -129,6 +144,25 @@
   </section>
 
   <section id="details" class="details">
+    <svg class="doodle doodle--tulip" viewBox="0 0 64 110" fill="none" aria-hidden="true">
+      <path d="M32 52 C31 74 32 92 32 104" stroke="var(--moss)" stroke-width="3.5" stroke-linecap="round"/>
+      <path d="M32 70 C22 68 15 61 13 51" stroke="var(--moss)" stroke-width="3.5" stroke-linecap="round"/>
+      <path d="M32 82 C42 80 49 73 51 63" stroke="var(--moss)" stroke-width="3.5" stroke-linecap="round"/>
+      <path d="M15 18 C12 38 19 50 32 52 C45 50 52 38 49 18 C43 27 40 26 32 15 C24 26 21 27 15 18 Z" fill="var(--copper)"/>
+    </svg>
+    <svg class="doodle doodle--daisy" viewBox="0 0 84 84" aria-hidden="true">
+      <g fill="var(--golden-hour)">
+        <ellipse cx="42" cy="15" rx="8" ry="15"/>
+        <ellipse cx="42" cy="69" rx="8" ry="15"/>
+        <ellipse cx="15" cy="42" rx="15" ry="8"/>
+        <ellipse cx="69" cy="42" rx="15" ry="8"/>
+        <ellipse cx="23" cy="23" rx="8" ry="15" transform="rotate(-45 23 23)"/>
+        <ellipse cx="61" cy="23" rx="8" ry="15" transform="rotate(45 61 23)"/>
+        <ellipse cx="23" cy="61" rx="8" ry="15" transform="rotate(45 23 61)"/>
+        <ellipse cx="61" cy="61" rx="8" ry="15" transform="rotate(-45 61 61)"/>
+      </g>
+      <circle cx="42" cy="42" r="11" fill="var(--copper)"/>
+    </svg>
     <div class="container">
       <div class="section-heading reveal">
         <span class="section-heading__eyebrow">Save the date</span>
@@ -251,6 +285,17 @@
   </section>
 
   <section id="rsvp" class="embed-section">
+    <svg class="doodle doodle--toast" viewBox="0 0 100 90" fill="none" aria-hidden="true">
+      <g transform="translate(30 30) rotate(14)">
+        <path d="M-11 0 C-11 15 -5 21 0 21 C5 21 11 15 11 0 Z" fill="var(--golden-hour)" stroke="var(--copper-deep)" stroke-width="3" stroke-linejoin="round"/>
+        <path d="M0 21 L0 36 M-9 38 L9 38" stroke="var(--copper-deep)" stroke-width="3" stroke-linecap="round"/>
+      </g>
+      <g transform="translate(70 28) rotate(-14)">
+        <path d="M-11 0 C-11 15 -5 21 0 21 C5 21 11 15 11 0 Z" fill="var(--blush)" stroke="var(--copper-deep)" stroke-width="3" stroke-linejoin="round"/>
+        <path d="M0 21 L0 36 M-9 38 L9 38" stroke="var(--copper-deep)" stroke-width="3" stroke-linecap="round"/>
+      </g>
+      <path d="M50 12 L50 4 M42 16 L37 10 M58 16 L63 10" stroke="var(--golden-hour)" stroke-width="3" stroke-linecap="round"/>
+    </svg>
     <div class="container">
       <div class="section-heading reveal">
         <span class="section-heading__eyebrow">Let us know</span>
@@ -283,7 +328,10 @@
         party, and let us know who's coming — it only takes a minute.</p>
       </div>
       <div class="rsvp-cta reveal">
-        <a class="btn" href="rsvp.html">Find Your Invitation</a>
+        <div class="rsvp-sign">
+          <span class="rsvp-sign__script">Come celebrate with us!</span>
+          <a class="btn" href="rsvp.html">Find Your Invitation</a>
+        </div>
       </div>
     </div>
   </section>

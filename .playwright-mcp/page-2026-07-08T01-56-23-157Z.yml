@@ -1,0 +1,19 @@
+- generic [active] [ref=f1e1]:
+  - navigation [ref=f1e2]:
+    - generic [ref=f1e3]:
+      - link "P & J" [ref=f1e4] [cursor=pointer]:
+        - /url: index.html
+      - list [ref=f1e5]:
+        - listitem [ref=f1e6]:
+          - link "Site" [ref=f1e7] [cursor=pointer]:
+            - /url: index.html
+        - listitem
+  - generic [ref=f1e10]:
+    - heading "Planner Login" [level=2] [ref=f1e11]
+    - generic [ref=f1e12]:
+      - generic [ref=f1e13]: Master Password
+      - textbox "Master Password" [ref=f1e14]
+      - button "Log in" [ref=f1e15] [cursor=pointer]
+  - contentinfo [ref=f1e16]:
+    - generic [ref=f1e17]: Parker & Jolan
+    - paragraph [ref=f1e18]: May 27, 2028 · parkerandjolan.com

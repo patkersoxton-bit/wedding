@@ -1,0 +1,79 @@
+- generic [active] [ref=f1e1]:
+  - navigation [ref=f1e2]:
+    - generic [ref=f1e3]:
+      - link "P & J" [ref=f1e4] [cursor=pointer]:
+        - /url: index.html
+      - list [ref=f1e5]:
+        - listitem [ref=f1e6]:
+          - link "Site" [ref=f1e7] [cursor=pointer]:
+            - /url: index.html
+        - listitem [ref=f1e19]:
+          - link "Log out" [ref=f1e20] [cursor=pointer]:
+            - /url: "#"
+  - generic [ref=f1e21]:
+    - heading "Planner Dashboard" [level=2] [ref=f1e23]
+    - tablist [ref=f1e24]:
+      - tab "Overview" [selected] [ref=f1e25] [cursor=pointer]
+      - tab "Guest Database" [ref=f1e26] [cursor=pointer]
+    - generic [ref=f1e27]:
+      - generic [ref=f1e28]:
+        - generic [ref=f1e29]:
+          - heading "121" [level=3] [ref=f1e30]
+          - paragraph [ref=f1e31]: Invited
+        - generic [ref=f1e32]:
+          - heading "2" [level=3] [ref=f1e33]
+          - paragraph [ref=f1e34]: Attending
+        - generic [ref=f1e35]:
+          - heading "0" [level=3] [ref=f1e36]
+          - paragraph [ref=f1e37]: Declined
+        - generic [ref=f1e38]:
+          - heading "119" [level=3] [ref=f1e39]
+          - paragraph [ref=f1e40]: Awaiting response
+      - generic [ref=f1e41]:
+        - generic [ref=f1e42]:
+          - heading "RSVP Responses" [level=3] [ref=f1e43]
+          - generic [ref=f1e44]:
+            - 'img "RSVP Responses: Attending 2, Declined 0, Awaiting response 119" [ref=f1e45]'
+            - list [ref=f1e48]:
+              - listitem [ref=f1e49]:
+                - generic [ref=f1e51]: Attending
+                - generic [ref=f1e52]: 2 (2%)
+              - listitem [ref=f1e53]:
+                - generic [ref=f1e55]: Declined
+                - generic [ref=f1e56]: 0 (0%)
+              - listitem [ref=f1e57]:
+                - generic [ref=f1e59]: Awaiting response
+                - generic [ref=f1e60]: 119 (98%)
+          - group [ref=f1e61]:
+            - generic "View as table" [ref=f1e62] [cursor=pointer]
+        - generic [ref=f1e63]:
+          - heading "Meal Preference" [level=3] [ref=f1e64]
+          - generic [ref=f1e65]:
+            - 'img "Meal Preference: Chicken 1, Beef 0, Fish 0, Vegetarian 1, Not selected 119" [ref=f1e66]'
+            - list [ref=f1e70]:
+              - listitem [ref=f1e71]:
+                - generic [ref=f1e73]: Chicken
+                - generic [ref=f1e74]: 1 (1%)
+              - listitem [ref=f1e75]:
+                - generic [ref=f1e77]: Beef
+                - generic [ref=f1e78]: 0 (0%)
+              - listitem [ref=f1e79]:
+                - generic [ref=f1e81]: Fish
+                - generic [ref=f1e82]: 0 (0%)
+              - listitem [ref=f1e83]:
+                - generic [ref=f1e85]: Vegetarian
+                - generic [ref=f1e86]: 1 (1%)
+              - listitem [ref=f1e87]:
+                - generic [ref=f1e89]: Not selected
+                - generic [ref=f1e90]: 119 (98%)
+          - group [ref=f1e91]:
+            - generic "View as table" [ref=f1e92] [cursor=pointer]
+        - generic [ref=f1e93]:
+          - heading "Response Rate" [level=3] [ref=f1e94]
+          - generic [ref=f1e95]:
+            - 'img "Response Rate: 2 of 121" [ref=f1e96]':
+              - generic [ref=f1e99]: 2%
+            - paragraph [ref=f1e100]: 2 of 121 invited guests have responded
+  - contentinfo [ref=f1e16]:
+    - generic [ref=f1e17]: Parker & Jolan
+    - paragraph [ref=f1e18]: May 27, 2028 · parkerandjolan.com
