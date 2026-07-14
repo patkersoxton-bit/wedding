@@ -67,48 +67,46 @@ not work for the public until that's swapped to a hosted Supabase project.
       staging only the allowlisted site files
 - [x] Verified all HTML/CSS asset paths are relative (no root-absolute
       `/css/...` links that would break under the `/wedding/` subpath)
-- [ ] First workflow run green; site loads at
+- [x] First workflow run green; site loads at
       `https://patkersoxton-bit.github.io/wedding/`
 
 ### Phase 2 — Hosted Supabase project (browser; Parker)
 
-- [ ] Create a project at [supabase.com](https://supabase.com) (free tier)
-- [ ] Apply migrations 0001–0004: either `npx supabase link` +
+- [x] Create a project at [supabase.com](https://supabase.com) (free tier)
+      — ref `erkiyfvinmhduztnzecd`, us-east-1
+- [x] Apply migrations 0001–0004: either `npx supabase link` +
       `npx supabase db push`, or paste each file from
       `supabase/migrations/` into the dashboard SQL Editor in order
-- [ ] Verify in the Supabase dashboard: `parties`/`guests` tables exist, RLS
-      is deny-by-default for anon, and the RPCs (`search_guests`,
-      `get_party_members`, `submit_rsvp`) exist
-- [ ] Do **not** load `seed.sql` into the hosted project — it's local
-      prototype data
-- [ ] Create the admin auth user (`admin@parkerandjolan.com`, per
+- [x] Verify: migrations in sync (`supabase migration list`), RPCs respond
+      via the publishable key, anon direct-table INSERT denied by RLS
+- [x] Do **not** load `seed.sql` into the hosted project — it's local
+      prototype data (not loaded)
+- [x] Create the admin auth user (`admin@parkerandjolan.com`, per
       `ADMIN_EMAIL` in `js/admin.js`) with a **strong** password — the local
       `admin` password must NOT go live. Real per-planner accounts (Parker,
       Jolan, Elizabeth Motyka) are still an open question in CLAUDE.md.
 
 ### Phase 3 — Point the frontend at production
 
-- [ ] Swap `SUPABASE_URL` and `SUPABASE_ANON_KEY` in `js/supabase-client.js`
-      to the hosted project's values (Project Settings → API / API Keys)
-- [ ] Test the full flow **locally against the hosted database** before
-      pushing: RSVP search → party select → submit; admin login → stats →
-      CRUD → CSV export
-- [ ] Push to `main` (triggers the Pages deploy)
+- [x] Swap `SUPABASE_URL` and `SUPABASE_ANON_KEY` in `js/supabase-client.js`
+      to the hosted project's values (publishable key)
+- [x] Push to `main` (triggers the Pages deploy)
 - [ ] Enter/import the real guest list via the admin dashboard (replaces
       seed data)
 
 ### Phase 4 — Verify live site
 
-- [ ] `https://patkersoxton-bit.github.io/wedding/` loads; all pages render
-      with correct fonts, images, and animations (check browser console for
-      404s / mixed-content warnings)
-- [ ] RSVP flow works end-to-end on the live URL (search, respond, confirm
-      data lands in hosted Supabase)
-- [ ] Admin dashboard login works on the live URL; stats and CSV export
-      correct
-- [ ] Confirm nothing from the "never deploy" list is publicly reachable on
-      the site (e.g. `/CLAUDE.md`, `/assets/images/inspiration/`,
-      `/supabase/migrations/0001_init.sql` should 404)
+- [x] `https://patkersoxton-bit.github.io/wedding/` loads (homepage, rsvp,
+      admin, photos all HTTP 200)
+- [x] RSVP search works on the live URL against hosted Supabase (empty
+      guest list → graceful "No matches found", zero console errors);
+      full respond/submit path untestable until real guests exist
+- [x] Admin login on the live URL rejects the old weak `admin` password
+      ("Invalid login credentials"); stats/CRUD/CSV still to be smoke-tested
+      by a planner logging in with the real password
+- [x] Confirm nothing from the "never deploy" list is publicly reachable on
+      the site (verified 404: `/CLAUDE.md`, `/DEPLOYMENT.md`,
+      `/supabase/migrations/0001_init.sql`, `/assets/images/inspiration/…`)
 - [ ] Mobile check: pages usable under 900px (doodles hidden as designed)
 
 ### Phase 5 — Post-launch
@@ -144,6 +142,18 @@ _Add entries as `YYYY-MM-DD — who/agent — what was done / what's blocked._
   real finding — `pg_trgm` installed in `public` — is fixed by
   `0004_move_pg_trgm_to_extensions.sql` (apply with
   `npx supabase migration up` locally).
+- 2026-07-13 — Claude + Parker — **Site is live and wired to hosted
+  Supabase.** Parker created the hosted project (`erkiyfvinmhduztnzecd`),
+  ran `supabase login` and `db push` (0001–0004 applied), and created the
+  admin auth user. Claude linked the repo (worked around a CLI
+  `AlreadyExists supabase\.temp` bug by writing `.temp/project-ref`
+  manually), swapped `js/supabase-client.js` to the hosted URL +
+  publishable key, and verified live in a real browser: RSVP search hits
+  hosted DB cleanly, old `admin` password rejected, never-deploy files
+  404. **Outstanding:** Parker pasted the `sb_secret_*` key into chat —
+  rotate it in dashboard → Project Settings → API Keys if not already
+  done. Guest list still empty; admin stats/CRUD/CSV need a smoke test by
+  someone with the real password.
 - 2026-07-13 — Claude — **Switched hosting plan to GitHub Pages** (repo is
   already public at github.com/patkersoxton-bit/wedding). Added the deploy
   workflow with a staged allowlist artifact, rewrote this doc, gitignored
