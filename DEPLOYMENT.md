@@ -160,3 +160,14 @@ _Add entries as `YYYY-MM-DD — who/agent — what was done / what's blocked._
   `.playwright-mcp/` + `.mcp.json` and untracked old playwright snapshots.
   Remaining human steps: Phase 2 (hosted Supabase, browser) and Phase 3
   (swap client credentials).
+- 2026-07-13 — Claude — **Added a site-wide password gate** (`js/gate.js`,
+  loaded blocking in the `<head>` of all three pages). Visitors must enter
+  the shared password (ask Parker; only its SHA-256 hash is in source,
+  entry is case-insensitive) before any content paints; unlock is
+  remembered per device via localStorage (key `pj_gate_v1` — clear it to
+  re-lock a browser). This is a **client-side deterrent only** — GitHub
+  Pages has no server, so anyone reading page source or fetching files
+  directly can bypass it; guest data remains protected by the Supabase
+  RLS/RPC model, and the admin dashboard still has its own real login on
+  top. Verified in a local browser: content hidden before unlock, wrong
+  password rejected, unlock persists across pages.
