@@ -83,6 +83,16 @@
               <p class="rsvp-hint" style="margin: 0;">Every field stored per guest — edit any cell directly, or delete a row.</p>
               <button id="export-csv" class="btn btn--outline" type="button">Export CSV (Zola format)</button>
             </div>
+            <div class="admin-filter-bar">
+              <input type="search" id="guest-search" placeholder="Search by guest or party name&hellip;" aria-label="Search guests">
+              <select id="filter-field" aria-label="Filter by field">
+                <option value="">Filter by field&hellip;</option>
+              </select>
+              <select id="filter-value" aria-label="Filter value" hidden></select>
+              <button type="button" id="filter-clear" class="admin-filter-clear" hidden>Clear</button>
+              <span id="guest-count" class="rsvp-hint"></span>
+            </div>
+            <datalist id="party-options"></datalist>
             <div class="admin-table-wrap">
               <table class="admin-table" id="guest-table">
                 <thead>

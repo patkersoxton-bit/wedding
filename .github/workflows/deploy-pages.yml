@@ -1,0 +1,47 @@
+name: Deploy site to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      # Only the public site files go into the deployed artifact. Everything
+      # else in the repo (inspiration references, supabase/ migrations,
+      # CLAUDE.md, tooling) must stay off the live site — see DEPLOYMENT.md
+      # "What gets deployed (and what must not be)".
+      - name: Stage site files
+        run: |
+          mkdir _site
+          cp *.html _site/
+          cp -r css js _site/
+          mkdir -p _site/assets/images
+          cp -r assets/images/photos _site/assets/images/
+
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - id: deployment
+        uses: actions/deploy-pages@v4

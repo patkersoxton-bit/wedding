@@ -16,9 +16,34 @@ const addGuestForm = document.getElementById('add-guest-form');
 const newGuestPartySelect = document.getElementById('new-guest-party');
 const exportBtn = document.getElementById('export-csv');
 const tabButtons = document.querySelectorAll('.admin-tab');
+const partyDatalist = document.getElementById('party-options');
+const guestSearchInput = document.getElementById('guest-search');
+const filterFieldSelect = document.getElementById('filter-field');
+const filterValueSelect = document.getElementById('filter-value');
+const filterClearBtn = document.getElementById('filter-clear');
+const guestCountEl = document.getElementById('guest-count');
 
 const FOOD_OPTIONS = ['', 'Chicken', 'Beef', 'Fish', 'Vegetarian'];
 const RSVP_OPTIONS = ['pending', 'yes', 'no'];
+
+// Columns the filter bar can match on. `get` normalizes a guest row to the
+// display value shown in the value dropdown ('' = blank/unset).
+const FILTER_FIELDS = {
+  party: { label: 'Party', get: (g) => g.parties?.party_name ?? '' },
+  invited: { label: 'Invited', get: (g) => (g.invited ? 'Yes' : 'No') },
+  rsvp_status: { label: 'RSVP', get: (g) => g.rsvp_status ?? '' },
+  food_preference: { label: 'Meal', get: (g) => g.food_preference ?? '' },
+  dietary_notes: { label: 'Dietary Notes', get: (g) => g.dietary_notes ?? '' },
+  city: { label: 'City', get: (g) => g.city ?? '' },
+  state_province: { label: 'State', get: (g) => g.state_province ?? '' },
+  country: { label: 'Country', get: (g) => g.country ?? '' },
+};
+// Sentinel for "field is blank" in the value dropdown — can't use '' because
+// that's the "any value" placeholder.
+const FILTER_BLANK = '__blank__';
+
+let allGuests = [];
+let partyList = [];
 
 // Deepened, CVD-validated variants of the site's brand hues — the soft
 // pastel theme palette fails the categorical contrast/chroma checks for
@@ -187,9 +212,13 @@ async function loadParties() {
     return;
   }
   clearDashboardError();
+  partyList = data;
   newGuestPartySelect.innerHTML = data
     .map((p) => `<option value="${p.id}">${escapeHtml(p.party_name)}</option>`)
     .join('');
+  partyDatalist.innerHTML =
+    '<option value="No party"></option>' +
+    data.map((p) => `<option value="${escapeHtml(p.party_name)}"></option>`).join('');
   return data;
 }
 
@@ -204,11 +233,77 @@ async function loadGuests() {
   }
 
   clearDashboardError();
+  allGuests = data;
+  renderGuestTable();
+}
+
+function renderGuestTable() {
+  const query = guestSearchInput.value.trim().toLowerCase();
+  const fieldKey = filterFieldSelect.value;
+  const fieldValue = filterValueSelect.value;
+  const fieldFilterActive = fieldKey && fieldValue !== '';
+
+  const filtered = allGuests.filter((guest) => {
+    if (query) {
+      const haystack = `${guest.first_name} ${guest.last_name} ${guest.parties?.party_name ?? ''}`.toLowerCase();
+      if (!haystack.includes(query)) return false;
+    }
+    if (fieldFilterActive) {
+      const actual = FILTER_FIELDS[fieldKey].get(guest);
+      if (fieldValue === FILTER_BLANK ? actual !== '' : actual !== fieldValue) return false;
+    }
+    return true;
+  });
+
   guestTableBody.innerHTML = '';
-  for (const guest of data) {
+  for (const guest of filtered) {
     guestTableBody.appendChild(buildGuestRow(guest));
   }
+
+  guestCountEl.textContent =
+    filtered.length === allGuests.length
+      ? `${allGuests.length} guest${allGuests.length === 1 ? '' : 's'}`
+      : `${filtered.length} of ${allGuests.length} guests`;
+  filterClearBtn.hidden = !query && !fieldFilterActive;
 }
+
+for (const [key, field] of Object.entries(FILTER_FIELDS)) {
+  const option = document.createElement('option');
+  option.value = key;
+  option.textContent = field.label;
+  filterFieldSelect.appendChild(option);
+}
+
+filterFieldSelect.addEventListener('change', () => {
+  const fieldKey = filterFieldSelect.value;
+  filterValueSelect.innerHTML = '';
+  filterValueSelect.hidden = !fieldKey;
+  if (fieldKey) {
+    const distinct = [...new Set(allGuests.map((g) => FILTER_FIELDS[fieldKey].get(g)))].sort();
+    const anyOption = document.createElement('option');
+    anyOption.value = '';
+    anyOption.textContent = 'Any value';
+    filterValueSelect.appendChild(anyOption);
+    for (const value of distinct) {
+      const option = document.createElement('option');
+      option.value = value === '' ? FILTER_BLANK : value;
+      option.textContent = value === '' ? '(blank)' : value;
+      filterValueSelect.appendChild(option);
+    }
+  }
+  renderGuestTable();
+});
+
+filterValueSelect.addEventListener('change', renderGuestTable);
+guestSearchInput.addEventListener('input', renderGuestTable);
+
+filterClearBtn.addEventListener('click', () => {
+  guestSearchInput.value = '';
+  filterFieldSelect.value = '';
+  filterValueSelect.innerHTML = '';
+  filterValueSelect.hidden = true;
+  renderGuestTable();
+});
 
 function formatTimestamp(value) {
   if (!value) return '—';
@@ -229,7 +324,7 @@ function buildGuestRow(guest) {
 
   tr.innerHTML = `
     <td class="admin-table__id" title="${guest.id}">${guest.id.slice(0, 8)}</td>
-    <td>${escapeHtml(guest.parties?.party_name)}</td>
+    <td><input type="text" class="field-party" list="party-options" value="${escapeHtml(guest.parties?.party_name)}" placeholder="No party — type to assign"></td>
     <td>${escapeHtml(guest.first_name)}</td>
     <td>${escapeHtml(guest.last_name)}</td>
     <td><input type="checkbox" class="field-invited" ${guest.invited ? 'checked' : ''}></td>
@@ -248,6 +343,34 @@ function buildGuestRow(guest) {
     <td><button type="button" class="admin-delete">Delete</button></td>
   `;
 
+  tr.querySelector('.field-party').addEventListener('change', async (e) => {
+    const name = e.target.value.trim();
+    const currentName = guest.parties?.party_name ?? '';
+    // Picking the "No party" option unassigns immediately; blanking the
+    // field also unassigns but asks first, since it's easy to do by accident.
+    const unassign = !name || name.toLowerCase() === 'no party';
+    if (unassign && !currentName) {
+      e.target.value = '';
+      return;
+    }
+    if (!unassign && name === currentName) return;
+    let partyId = null;
+    if (!unassign) {
+      const match = partyList.find((p) => p.party_name.toLowerCase() === name.toLowerCase());
+      if (!match) {
+        alert(`No party named "${name}" — pick one from the list, or create it with the Add Party form first.`);
+        e.target.value = currentName;
+        return;
+      }
+      partyId = match.id;
+    } else if (!name && !confirm(`Remove ${guest.first_name} ${guest.last_name} from "${currentName}"?`)) {
+      e.target.value = currentName;
+      return;
+    }
+    await updateGuest(guest.id, { party_id: partyId });
+    // Reload so the row reflects the joined party name, not just the id.
+    await loadGuests();
+  });
   tr.querySelector('.field-invited').addEventListener('change', (e) =>
     updateGuest(guest.id, { invited: e.target.checked })
   );
@@ -302,6 +425,10 @@ async function updateGuest(id, fields) {
     await Promise.all([loadStats(), loadGuests()]);
     return;
   }
+  // Keep the local copy in sync so re-renders (filter changes) don't revert
+  // the cell to a stale value.
+  const cached = allGuests.find((g) => g.id === id);
+  if (cached) Object.assign(cached, fields);
   await loadStats();
 }
 

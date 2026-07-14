@@ -3,3 +3,5 @@ Thumbs.db
 *.log
 .vscode/
 .claude/settings.local.json
+.playwright-mcp/
+.mcp.json

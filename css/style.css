@@ -523,19 +523,25 @@ section {
 
 .embed-card {
   background: linear-gradient(135deg, rgba(239, 83, 86, 0.07), rgba(192, 207, 224, 0.18));
-  border: 1px dashed var(--color-primary);
+  border: 1px solid var(--color-primary);
   border-radius: var(--radius);
   padding: var(--space-lg);
   text-align: center;
 }
 
-.embed-card__placeholder {
+/* fallback link shown until (or in case) Zola's widget.js swaps it out */
+.embed-card .zola-registry-embed {
   font-family: var(--font-body);
-  color: var(--color-text-soft);
-  font-size: 0.9rem;
+  color: var(--color-primary);
+  font-size: 1rem;
 }
 
 .embed-card .btn {
+  margin-top: var(--space-md);
+}
+
+.registry-cta {
+  text-align: center;
   margin-top: var(--space-md);
 }
 
@@ -919,6 +925,42 @@ section {
   font-family: var(--font-body);
 }
 
+.admin-filter-bar {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: var(--space-md);
+}
+
+.admin-filter-bar input[type="search"],
+.admin-filter-bar select {
+  padding: 0.6rem 1rem;
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  font-family: var(--font-body);
+}
+
+.admin-filter-bar input[type="search"] {
+  min-width: 16rem;
+}
+
+.admin-filter-clear {
+  background: none;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-soft);
+  border-radius: 999px;
+  padding: 0.4rem 0.9rem;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.admin-filter-clear:hover {
+  border-color: var(--copper-deep);
+  color: var(--copper-deep);
+}
+
 .admin-table-wrap {
   overflow-x: auto;
   margin-top: var(--space-md);
@@ -945,6 +987,10 @@ section {
   border: 1px solid var(--color-border);
   font-family: var(--font-body);
   width: 9rem;
+}
+
+.admin-table .field-party {
+  width: 12rem;
 }
 
 .admin-table .field-extra {
