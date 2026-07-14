@@ -1,11 +1,12 @@
-// Shared Supabase client. Local prototype credentials for now — swap these
-// for the hosted project's URL/anon key before going live (both are safe to
-// expose client-side; write access is enforced by RLS + the RPCs in
-// supabase/migrations/, not by keeping this key secret).
+// Shared Supabase client, pointed at the hosted project (both values are
+// safe to expose client-side; write access is enforced by RLS + the RPCs in
+// supabase/migrations/, not by keeping this key secret). For local dev
+// against the Docker stack, swap back to http://127.0.0.1:54321 and the
+// local demo anon key printed by `npx supabase status`.
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-const SUPABASE_URL = 'http://127.0.0.1:54321';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0';
+const SUPABASE_URL = 'https://erkiyfvinmhduztnzecd.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_42A5JpKb4rTKpUHl6Jh_kA_i35l9tPu';
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
