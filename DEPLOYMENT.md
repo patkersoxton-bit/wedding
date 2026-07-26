@@ -79,8 +79,12 @@ not work for the public until that's swapped to a hosted Supabase project.
       `supabase/migrations/` into the dashboard SQL Editor in order
 - [x] Verify: migrations in sync (`supabase migration list`), RPCs respond
       via the publishable key, anon direct-table INSERT denied by RLS
-- [x] Do **not** load `seed.sql` into the hosted project — it's local
-      prototype data (not loaded)
+- [x] ~~Do **not** load `seed.sql` into the hosted project — it's local
+      prototype data (not loaded)~~ **Corrected 2026-07-26**: this was
+      wrong — `seed.sql`'s guest INSERT is the real 119-guest list, not
+      disposable prototype data. It's now loaded into the hosted project
+      (only the "Test Party" fixture at the bottom of the file stays
+      local-only). See progress log.
 - [x] Create the admin auth user (`admin@parkerandjolan.com`, per
       `ADMIN_EMAIL` in `js/admin.js`) with a **strong** password — the local
       `admin` password must NOT go live. Real per-planner accounts (Parker,
@@ -91,8 +95,8 @@ not work for the public until that's swapped to a hosted Supabase project.
 - [x] Swap `SUPABASE_URL` and `SUPABASE_ANON_KEY` in `js/supabase-client.js`
       to the hosted project's values (publishable key)
 - [x] Push to `main` (triggers the Pages deploy)
-- [ ] Enter/import the real guest list via the admin dashboard (replaces
-      seed data)
+- [x] Enter/import the real guest list via the admin dashboard (replaces
+      seed data) — done 2026-07-26, see progress log
 
 ### Phase 4 — Verify live site
 
@@ -171,3 +175,42 @@ _Add entries as `YYYY-MM-DD — who/agent — what was done / what's blocked._
   RLS/RPC model, and the admin dashboard still has its own real login on
   top. Verified in a local browser: content hidden before unlock, wrong
   password rejected, unlock persists across pages.
+- 2026-07-26 — Claude — **Custom domain (parkerandjolan.com) connected**
+  via Cloudflare DNS (4 apex A records to GitHub's Pages IPs + `www` CNAME,
+  all DNS-only/grey-cloud) and GitHub Pages custom domain settings. Added
+  `CNAME` file to the repo and to the deploy workflow's staged artifact
+  (previously missing, which could have caused the domain association to
+  drop on a future deploy). HTTPS enforced; both apex and `www` verified
+  live over HTTPS with `www` redirecting to the apex.
+- 2026-07-26 — Claude — **Root-caused and fixed the empty admin
+  dashboard/guest list.** Parker reported the live admin dashboard showed
+  no guests and suspected the hosted Supabase project had been paused and
+  lost data. Investigation (using a Supabase personal access token to
+  query the Management API directly, bypassing the site/RLS entirely):
+  only one project exists in the account (`erkiyfvinmhduztnzecd`, the same
+  one the site already points to), it was `ACTIVE_HEALTHY` at the time of
+  investigation, and `pg_stat_user_tables.n_tup_ins = 0` for both `guests`
+  and `parties` — proof no row had ever been inserted into the hosted
+  tables (that counter doesn't reset on delete, only on a stats reset).
+  **Actual root cause**: `supabase/seed.sql` contains the real 119-guest
+  list (imported from Parker's actual guest-list doc), but a past pass
+  (2026-07-13 log entry, Phase 2 checklist) misread its header comment as
+  disposable "test data" and deliberately never loaded it into the hosted
+  project — it had been sitting correctly in the repo the whole time,
+  just never pushed to the database the live site reads from. Fixed by
+  extracting the real-guest INSERT (excluding the local-only "Test Party"
+  fixture at the bottom of `seed.sql`) and running it against the hosted
+  project via the Management API; verified 119 guests now visible in the
+  live admin dashboard. Also corrected `seed.sql`'s misleading comment and
+  the Phase 2 checklist item so this can't be misread the same way again.
+  **Prevention for the actual "paused project" risk** (real, even though
+  it wasn't this incident's cause): free-tier Supabase projects auto-pause
+  after 7 days with no API activity, which would make the live site
+  unreachable until someone manually restores it in the dashboard. Added
+  `.github/workflows/keep-supabase-awake.yml`, a scheduled Action pinging
+  the REST API twice a week to keep the project active. Note: free tier
+  still has no PITR/backups (`pitr_enabled: false`, no backup snapshots) —
+  Parker should periodically use the admin dashboard's "Export CSV" button
+  as a personal backup, or consider Supabase Pro closer to the wedding for
+  real backup coverage; don't back up guest data into this repo, it's
+  public.

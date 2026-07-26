@@ -1,10 +1,21 @@
--- Test data: real guest list names imported from "guest list.docx.md" to
--- exercise the guests table fields end-to-end. Party assignments are left
--- NULL on every row — the party/tree structure isn't decided yet and will
--- be filled in (and the schema likely revamped) once it is. Footnote
--- markers (*1, #2, "ceremony roll?", etc.), section headers/counts, and
--- unnamed "+1 / sig other" placeholder rows from the source doc were
--- dropped since they aren't guests themselves.
+-- REAL guest list (not a fixture) — imported from "guest list.docx.md".
+-- This is the actual production guest data and belongs in the hosted
+-- Supabase project, not just local dev. Party assignments are left NULL on
+-- every row — the party/tree structure isn't decided yet and will be
+-- filled in (and the schema likely revamped) once it is. Footnote markers
+-- (*1, #2, "ceremony roll?", etc.), section headers/counts, and unnamed
+-- "+1 / sig other" placeholder rows from the source doc were dropped since
+-- they aren't guests themselves.
+--
+-- 2026-07-26: this file was run locally only — a past pass mislabeled it
+-- as disposable "test data" and deliberately skipped loading it into the
+-- hosted project (see DEPLOYMENT.md Phase 2/3), leaving the real 119-guest
+-- list sitting unused in this repo for weeks while the live admin
+-- dashboard showed an empty database. Loaded into the hosted project
+-- directly via the Supabase Management API on 2026-07-26. If this table
+-- is ever legitimately emptied again, re-run just the INSERT below
+-- (excluding the "Test Party" fixture at the bottom of this file) against
+-- the hosted project — do not treat this block as a throwaway fixture.
 insert into guests (party_id, first_name, last_name, invited) values
   (NULL, 'Elizabeth', 'Motyka', true),
   (NULL, 'Tom', 'Motyka', true),
