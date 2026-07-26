@@ -970,6 +970,13 @@ section {
   gap: var(--space-sm);
 }
 
+.admin-panel__header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-left: auto;
+}
+
 .admin-inline-form {
   display: flex;
   gap: var(--space-sm);
