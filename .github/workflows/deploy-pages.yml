@@ -34,6 +34,7 @@ jobs:
           cp -r css js _site/
           mkdir -p _site/assets/images
           cp -r assets/images/photos _site/assets/images/
+          cp CNAME _site/
 
       - uses: actions/configure-pages@v5
         with:
