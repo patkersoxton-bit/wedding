@@ -548,7 +548,11 @@ exportShutterflyBtn.addEventListener('click', () => {
       g.phone ?? '',
     ]);
   }
-  const csv = rows.map((row) => row.map(csvCell).join(',')).join('\n');
+  // Shutterfly's importer rejects quoted fields (their own blank template —
+  // see sfly_addresses.csv — has bare, unquoted headers with no wrapping
+  // quotes at all), unlike the Zola export above. Only quote a field when a
+  // comma/quote/newline inside it would otherwise break the column split.
+  const csv = rows.map((row) => row.map(shutterflyCsvCell).join(',')).join('\n');
 
   const blob = new Blob([csv], { type: 'text/csv' });
   const url = URL.createObjectURL(blob);
@@ -561,6 +565,11 @@ exportShutterflyBtn.addEventListener('click', () => {
 
 function csvCell(value) {
   return `"${String(value).replace(/"/g, '""')}"`;
+}
+
+function shutterflyCsvCell(value) {
+  const str = String(value ?? '');
+  return /[",\n]/.test(str) ? `"${str.replace(/"/g, '""')}"` : str;
 }
 
 init();
