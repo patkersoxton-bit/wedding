@@ -1,0 +1,54 @@
+name: Backup guest list
+
+# Free-tier Supabase has no PITR/backups, and the repo this workflow lives
+# in is public (guest PII can never be committed here). This exports the
+# full guest table via the Supabase Management API and pushes a dated CSV
+# snapshot into a separate PRIVATE repo instead. Weekly is enough given the
+# RSVP timeline; run manually any time via workflow_dispatch.
+on:
+  schedule:
+    - cron: '0 6 * * 0'
+  workflow_dispatch:
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Export guests from Supabase
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          curl -sf -X POST "https://api.supabase.com/v1/projects/erkiyfvinmhduztnzecd/database/query" \
+            -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{"query":"select g.id, p.party_name, g.first_name, g.last_name, g.invited, g.rsvp_status, g.food_preference, g.dietary_notes, g.address_line1, g.address_line2, g.city, g.state_province, g.postal_code, g.country, g.responded_at, g.created_at from guests g left join parties p on p.id = g.party_id order by g.last_name, g.first_name;"}' \
+            -o guests.json
+
+      - name: Convert to CSV
+        run: |
+          python3 -c "
+          import json, csv
+          with open('guests.json', encoding='utf-8') as f:
+              rows = json.load(f)
+          fieldnames = ['id','party_name','first_name','last_name','invited','rsvp_status','food_preference','dietary_notes','address_line1','address_line2','city','state_province','postal_code','country','responded_at','created_at']
+          with open('guests.csv', 'w', newline='', encoding='utf-8') as f:
+              writer = csv.DictWriter(f, fieldnames=fieldnames)
+              writer.writeheader()
+              writer.writerows(rows)
+          print(f'{len(rows)} guests exported')
+          "
+
+      - name: Push snapshot to private backup repo
+        env:
+          BACKUP_REPO_TOKEN: ${{ secrets.BACKUP_REPO_TOKEN }}
+        run: |
+          DATE=$(date +%Y-%m-%d)
+          git clone "https://x-access-token:${BACKUP_REPO_TOKEN}@github.com/patkersoxton-bit/guest-list-backup.git" backup-repo
+          mkdir -p backup-repo/backups
+          cp guests.csv "backup-repo/backups/guests-${DATE}.csv"
+          cd backup-repo
+          git config user.name "Guest Backup Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add "backups/guests-${DATE}.csv"
+          git commit -m "Guest backup ${DATE}" || echo "No changes to commit"
+          git push
