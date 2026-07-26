@@ -83,6 +83,7 @@
               <h3>Guest Database</h3>
               <p class="rsvp-hint" style="margin: 0;">Every field stored per guest — edit any cell directly, or delete a row.</p>
               <button id="export-csv" class="btn btn--outline" type="button">Export CSV (Zola format)</button>
+              <button id="export-csv-shutterfly" class="btn btn--outline" type="button">Export CSV (Shutterfly format)</button>
             </div>
             <div class="admin-filter-bar">
               <input type="search" id="guest-search" placeholder="Search by guest or party name&hellip;" aria-label="Search guests">
@@ -100,6 +101,7 @@
                   <tr>
                     <th>ID</th>
                     <th>Party</th>
+                    <th>Title</th>
                     <th>First</th>
                     <th>Last</th>
                     <th>Invited</th>
@@ -112,6 +114,8 @@
                     <th>State</th>
                     <th>Postal</th>
                     <th>Country</th>
+                    <th>Email</th>
+                    <th>Phone</th>
                     <th>Extra (JSON)</th>
                     <th>Responded</th>
                     <th>Created</th>

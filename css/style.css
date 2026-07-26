@@ -674,7 +674,9 @@ section {
 .rsvp-search input,
 .rsvp-card input[type="text"],
 .rsvp-card input[type="email"],
-.rsvp-card input[type="password"] {
+.rsvp-card input[type="password"],
+.rsvp-card input[type="tel"],
+.rsvp-card select {
   width: 100%;
   padding: 0.85rem 1rem;
   border-radius: 999px;
@@ -682,6 +684,31 @@ section {
   font-family: var(--font-body);
   font-size: 1rem;
   margin-bottom: var(--space-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.rsvp-hint-inline {
+  color: var(--color-text-soft);
+  font-weight: 400;
+  font-size: 0.85rem;
+}
+
+.address-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-md);
+}
+
+.address-row--3 {
+  grid-template-columns: 1.4fr 1fr 1fr;
+}
+
+@media (max-width: 640px) {
+  .address-row,
+  .address-row--3 {
+    grid-template-columns: 1fr;
+  }
 }
 
 .rsvp-results {

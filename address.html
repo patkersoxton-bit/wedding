@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Save Your Address | Parker &amp; Jolan</title>
+  <meta name="description" content="Send Parker &amp; Jolan your mailing address.">
+  <!-- Standalone, unlisted page: no nav/footer links to the main site, no
+       site password gate (js/gate.js), and not indexed by search engines.
+       This is a pre-launch link shared directly by email — it should never
+       be discoverable from, or lead to, the rest of parkerandjolan.com. -->
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8C%B8%3C/text%3E%3C/svg%3E">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <section class="rsvp-page">
+    <div class="container">
+      <div class="section-heading reveal">
+        <span class="section-heading__eyebrow">Parker &amp; Jolan</span>
+        <div class="floral-divider" aria-hidden="true">
+          <svg viewBox="0 0 140 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M70 16 C55 4 40 4 22 16" stroke="var(--moss)" stroke-width="2" stroke-linecap="round"/>
+            <path d="M70 16 C85 4 100 4 118 16" stroke="var(--moss)" stroke-width="2" stroke-linecap="round"/>
+            <g transform="translate(22,15)">
+              <circle cx="-4" cy="-3" r="5" fill="var(--copper)"/>
+              <circle cx="4" cy="-3" r="5" fill="var(--apricot)"/>
+              <circle cx="0" cy="4" r="5" fill="var(--golden-hour)"/>
+              <circle cx="0" cy="0" r="2.4" fill="var(--blush)"/>
+            </g>
+            <g transform="translate(118,15)">
+              <circle cx="-4" cy="-3" r="5" fill="var(--apricot)"/>
+              <circle cx="4" cy="-3" r="5" fill="var(--copper)"/>
+              <circle cx="0" cy="4" r="5" fill="var(--golden-hour)"/>
+              <circle cx="0" cy="0" r="2.4" fill="var(--blush)"/>
+            </g>
+            <g transform="translate(70,9)">
+              <circle cx="-3.4" cy="-2" r="4" fill="var(--misty-blue)"/>
+              <circle cx="3.4" cy="-2" r="4" fill="var(--misty-blue)"/>
+              <circle cx="0" cy="3.4" r="4" fill="var(--copper)"/>
+              <circle cx="0" cy="0" r="2" fill="var(--golden-hour)"/>
+            </g>
+          </svg>
+        </div>
+        <h2>Save your address</h2>
+        <p>We're getting our mailing list together and would love to send something your way. Mind sharing your address below?</p>
+      </div>
+
+      <p id="address-error" class="alert-error" role="alert" hidden></p>
+
+      <div id="step-form" class="rsvp-card reveal">
+        <form id="address-form" autocomplete="off">
+          <label class="rsvp-label" for="field-title">Title</label>
+          <select id="field-title" name="field-title" autocomplete="off" required>
+            <option value="" disabled selected>Select…</option>
+            <option value="Mr.">Mr.</option>
+            <option value="Mrs.">Mrs.</option>
+            <option value="Ms.">Ms.</option>
+            <option value="Mx.">Mx.</option>
+            <option value="Dr.">Dr.</option>
+            <option value="Miss">Miss</option>
+          </select>
+
+          <div class="address-row">
+            <div>
+              <label class="rsvp-label" for="field-first-name">First name</label>
+              <input type="text" id="field-first-name" name="field-first-name" autocomplete="off" required>
+            </div>
+            <div>
+              <label class="rsvp-label" for="field-last-name">Last name</label>
+              <input type="text" id="field-last-name" name="field-last-name" autocomplete="off" required>
+            </div>
+          </div>
+
+          <label class="rsvp-label" for="field-household">Household</label>
+          <input type="text" id="field-household" name="field-household" autocomplete="off" placeholder="e.g. “The Sexton Family” or “John &amp; Jane Smith”" required>
+
+          <label class="rsvp-label" for="field-address1">Street address</label>
+          <input type="text" id="field-address1" name="field-address1" autocomplete="off" required>
+
+          <label class="rsvp-label" for="field-address2">Apt / Unit <span class="rsvp-hint-inline">(optional)</span></label>
+          <input type="text" id="field-address2" name="field-address2" autocomplete="off">
+
+          <div class="address-row address-row--3">
+            <div>
+              <label class="rsvp-label" for="field-city">City</label>
+              <input type="text" id="field-city" name="field-city" autocomplete="off" required>
+            </div>
+            <div>
+              <label class="rsvp-label" for="field-state">State</label>
+              <input type="text" id="field-state" name="field-state" autocomplete="off" required>
+            </div>
+            <div>
+              <label class="rsvp-label" for="field-zip">Zip</label>
+              <input type="text" id="field-zip" name="field-zip" autocomplete="off" inputmode="numeric" required>
+            </div>
+          </div>
+
+          <label class="rsvp-label" for="field-email">Email</label>
+          <input type="email" id="field-email" name="field-email" autocomplete="off" required>
+
+          <label class="rsvp-label" for="field-phone">Phone number</label>
+          <input type="tel" id="field-phone" name="field-phone" autocomplete="off" required>
+
+          <button type="submit" class="btn">Submit address</button>
+        </form>
+      </div>
+
+      <div id="step-done" class="rsvp-card" hidden>
+        <h3>Thank you!</h3>
+        <p>Your address has been saved.</p>
+      </div>
+    </div>
+  </section>
+
+  <script type="module" src="js/address.js"></script>
+</body>
+</html>

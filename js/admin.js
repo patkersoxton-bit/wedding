@@ -15,6 +15,7 @@ const addPartyForm = document.getElementById('add-party-form');
 const addGuestForm = document.getElementById('add-guest-form');
 const newGuestPartySelect = document.getElementById('new-guest-party');
 const exportBtn = document.getElementById('export-csv');
+const exportShutterflyBtn = document.getElementById('export-csv-shutterfly');
 const tabButtons = document.querySelectorAll('.admin-tab');
 const partyDatalist = document.getElementById('party-options');
 const guestSearchInput = document.getElementById('guest-search');
@@ -24,6 +25,7 @@ const filterClearBtn = document.getElementById('filter-clear');
 const guestCountEl = document.getElementById('guest-count');
 
 const FOOD_OPTIONS = ['', 'Chicken', 'Beef', 'Fish', 'Vegetarian'];
+const TITLE_OPTIONS = ['', 'Mr.', 'Mrs.', 'Ms.', 'Mx.', 'Dr.', 'Miss'];
 const RSVP_OPTIONS = ['pending', 'yes', 'no'];
 
 // Columns the filter bar can match on. `get` normalizes a guest row to the
@@ -320,11 +322,15 @@ function buildGuestRow(guest) {
   const rsvpOptions = RSVP_OPTIONS.map(
     (opt) => `<option value="${opt}" ${guest.rsvp_status === opt ? 'selected' : ''}>${opt}</option>`
   ).join('');
+  const titleOptions = TITLE_OPTIONS.map(
+    (opt) => `<option value="${opt}" ${guest.title === opt ? 'selected' : ''}>${opt || '—'}</option>`
+  ).join('');
   const extraJson = JSON.stringify(guest.extra ?? {});
 
   tr.innerHTML = `
     <td class="admin-table__id" title="${guest.id}">${guest.id.slice(0, 8)}</td>
     <td><input type="text" class="field-party" list="party-options" value="${escapeHtml(guest.parties?.party_name)}" placeholder="No party — type to assign"></td>
+    <td><select class="field-title">${titleOptions}</select></td>
     <td>${escapeHtml(guest.first_name)}</td>
     <td>${escapeHtml(guest.last_name)}</td>
     <td><input type="checkbox" class="field-invited" ${guest.invited ? 'checked' : ''}></td>
@@ -337,6 +343,8 @@ function buildGuestRow(guest) {
     <td><input type="text" class="field-state" value="${escapeHtml(guest.state_province)}"></td>
     <td><input type="text" class="field-postal" value="${escapeHtml(guest.postal_code)}"></td>
     <td><input type="text" class="field-country" value="${escapeHtml(guest.country)}"></td>
+    <td><input type="email" class="field-email" value="${escapeHtml(guest.email)}"></td>
+    <td><input type="tel" class="field-phone" value="${escapeHtml(guest.phone)}"></td>
     <td><input type="text" class="field-extra" value="${escapeHtml(extraJson)}"></td>
     <td>${formatTimestamp(guest.responded_at)}</td>
     <td>${formatTimestamp(guest.created_at)}</td>
@@ -400,6 +408,15 @@ function buildGuestRow(guest) {
   );
   tr.querySelector('.field-country').addEventListener('change', (e) =>
     updateGuest(guest.id, { country: e.target.value || null })
+  );
+  tr.querySelector('.field-title').addEventListener('change', (e) =>
+    updateGuest(guest.id, { title: e.target.value || null })
+  );
+  tr.querySelector('.field-email').addEventListener('change', (e) =>
+    updateGuest(guest.id, { email: e.target.value || null })
+  );
+  tr.querySelector('.field-phone').addEventListener('change', (e) =>
+    updateGuest(guest.id, { phone: e.target.value || null })
   );
   tr.querySelector('.field-extra').addEventListener('change', (e) => {
     try {
@@ -501,6 +518,43 @@ exportBtn.addEventListener('click', async () => {
   const a = document.createElement('a');
   a.href = url;
   a.download = 'zola-guest-export.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+exportShutterflyBtn.addEventListener('click', () => {
+  // Shutterfly's address-book importer expects this exact header row and
+  // column order. Required fields: First/Last (or Display) Name, Address
+  // Line 1, City, State, Zip Code, Country — Commune is only required for
+  // Vietnam addresses, which don't apply here, so it's always left blank.
+  // Country isn't collected anywhere in our forms, so default to USA.
+  const rows = [[
+    'First Name*', 'Last Name*', 'Display Name*', 'Address Line 1*', 'Address Line 2',
+    'City*', 'Commune', 'State*', 'Zip Code*', 'Country*', 'Email', 'Phones',
+  ]];
+  for (const g of allGuests) {
+    rows.push([
+      g.first_name ?? '',
+      g.last_name ?? '',
+      g.parties?.party_name ?? '',
+      g.address_line1 ?? '',
+      g.address_line2 ?? '',
+      g.city ?? '',
+      '',
+      g.state_province ?? '',
+      g.postal_code ?? '',
+      g.country || 'USA',
+      g.email ?? '',
+      g.phone ?? '',
+    ]);
+  }
+  const csv = rows.map((row) => row.map(csvCell).join(',')).join('\n');
+
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'shutterfly-address-export.csv';
   a.click();
   URL.revokeObjectURL(url);
 });
