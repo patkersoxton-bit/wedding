@@ -7,12 +7,34 @@ window.addEventListener('scroll', () => {
   nav.classList.toggle('is-scrolled', window.scrollY > 12);
 }, { passive: true });
 
+const setNavOpen = (isOpen) => {
+  navLinks.classList.toggle('is-open', isOpen);
+  navToggle.setAttribute('aria-expanded', String(isOpen));
+};
+
 navToggle?.addEventListener('click', () => {
-  navLinks.classList.toggle('is-open');
+  setNavOpen(!navLinks.classList.contains('is-open'));
 });
 
 navLinks?.querySelectorAll('a').forEach((link) => {
-  link.addEventListener('click', () => navLinks.classList.remove('is-open'));
+  link.addEventListener('click', () => setNavOpen(false));
+});
+
+document.addEventListener('click', (event) => {
+  if (
+    navLinks?.classList.contains('is-open') &&
+    !navLinks.contains(event.target) &&
+    !navToggle.contains(event.target)
+  ) {
+    setNavOpen(false);
+  }
+});
+
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape' && navLinks?.classList.contains('is-open')) {
+    setNavOpen(false);
+    navToggle.focus();
+  }
 });
 
 // Reveal-on-scroll

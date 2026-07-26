@@ -19,8 +19,8 @@
   <nav class="site-nav">
     <div class="container">
       <a href="#" class="site-nav__logo">P &amp; J</a>
-      <button class="site-nav__toggle" aria-label="Toggle navigation">&#9776;</button>
-      <ul class="site-nav__links">
+      <button class="site-nav__toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="site-nav-links">&#9776;</button>
+      <ul class="site-nav__links" id="site-nav-links">
         <li><a href="#story">Our Story</a></li>
         <li><a href="#details">Details</a></li>
         <li><a href="#gallery">Gallery</a></li>
@@ -61,7 +61,7 @@
         </div>
       </div>
     </div>
-    <span class="hero__scroll">&#8595;</span>
+    <a href="#story" class="hero__scroll" aria-label="Scroll to next section">&#8595;</a>
   </header>
 
   <section id="story" class="story">
