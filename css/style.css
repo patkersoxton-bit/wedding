@@ -736,6 +736,36 @@ section {
   box-shadow: none;
 }
 
+/* ---------- Canva-embed homepage ---------- */
+
+.canva-embed-page {
+  padding-top: 4rem;
+  background: var(--cream);
+}
+
+.canva-embed {
+  position: relative;
+  width: 100%;
+  height: calc(100vh - 4rem);
+  overflow: hidden;
+}
+
+.canva-embed iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.canva-embed-credit {
+  display: block;
+  text-align: center;
+  padding: 0.4rem;
+  color: var(--color-text-soft);
+  font-size: 0.75rem;
+}
+
 /* ---------- RSVP page ---------- */
 
 .rsvp-page {

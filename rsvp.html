@@ -21,10 +21,9 @@
       <a href="index.html" class="site-nav__logo">P &amp; J</a>
       <button class="site-nav__toggle" aria-label="Toggle navigation">&#9776;</button>
       <ul class="site-nav__links">
-        <li><a href="index.html#story">Our Story</a></li>
-        <li><a href="index.html#details">Details</a></li>
+        <li><a href="venue.html">Venue</a></li>
+        <li><a href="travel.html">Travel</a></li>
         <li><a href="rsvp.html">RSVP</a></li>
-        <li><a href="index.html#registry">Registry</a></li>
       </ul>
     </div>
   </nav>
@@ -58,24 +57,33 @@
           </svg>
         </div>
         <h2>RSVP</h2>
-        <p>Search for your name to find your party and let us know if you'll be joining us.</p>
+        <p>Enter your name exactly as it appears on your invitation to find your RSVP.</p>
       </div>
 
       <p id="rsvp-error" class="alert-error" role="alert" hidden></p>
 
-      <!-- Step 1: search -->
+      <!-- Step 1: find invitation by exact name (no live search / no other names shown) -->
       <div id="step-search" class="rsvp-card reveal">
-        <label class="rsvp-label" for="search-input">Find your invitation</label>
-        <div class="rsvp-search">
-          <input type="text" id="search-input" placeholder="Type your first or last name…" autocomplete="off">
-        </div>
-        <ul id="search-results" class="rsvp-results"></ul>
+        <form id="find-form">
+          <div class="address-row">
+            <div>
+              <label class="rsvp-label" for="find-first-name">First name</label>
+              <input type="text" id="find-first-name" autocomplete="off" required>
+            </div>
+            <div>
+              <label class="rsvp-label" for="find-last-name">Last name</label>
+              <input type="text" id="find-last-name" autocomplete="off" required>
+            </div>
+          </div>
+          <button type="submit" class="btn">Find my invitation</button>
+        </form>
+        <ul id="search-results" class="rsvp-results" hidden></ul>
         <p id="search-empty" class="rsvp-hint" hidden>No matches found — double check the spelling, or reach out to Parker or Jolan directly.</p>
       </div>
 
       <!-- Step 2: party members / responses -->
       <div id="step-party" class="rsvp-card" hidden>
-        <button id="back-to-search" class="rsvp-back" type="button">&larr; Not your party? Search again</button>
+        <button id="back-to-search" class="rsvp-back" type="button">&larr; Not you? Search again</button>
         <h3 id="party-name" class="rsvp-party-name"></h3>
         <form id="rsvp-form">
           <div id="party-members"></div>
