@@ -1,0 +1,9 @@
+[Unit]
+Description=Sync hosted Supabase guest list into the local mirror + snapshots
+After=wedding-supabase.service
+
+[Service]
+Type=oneshot
+EnvironmentFile=%h/.config/wedding-mirror/env
+ExecStart=/usr/bin/python3 %h/wedding/backup/mirror.py sync
+TimeoutStartSec=120

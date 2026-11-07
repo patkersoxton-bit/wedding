@@ -53,6 +53,10 @@ and RSVP data outright instead of handing it to a third party.
 │   ├── rsvp.js          # rsvp.html logic (search, party lookup, submit)
 │   ├── admin.js         # admin.html logic (auth, stats, CRUD, CSV export)
 │   └── charts.js        # hand-rolled SVG pie/meter charts for the dashboard
+├── backup/              # live mirror + snapshot history on the OptiPlex (see backup/README.md)
+│   ├── mirror.py        # sync/status/restore; data goes to ~/wedding-backups, never the repo
+│   ├── install.sh       # installs the systemd user units below
+│   └── systemd/         # wedding-supabase.service, wedding-mirror.{service,timer}
 ├── supabase/
 │   ├── config.toml      # Supabase CLI local-dev config
 │   ├── migrations/      # schema: tables, RLS policies, RPC functions (0001_init.sql, …)

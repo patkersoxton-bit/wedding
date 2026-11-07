@@ -1,0 +1,20 @@
+[Unit]
+Description=Local Supabase stack for the wedding site (backup mirror)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+WorkingDirectory=%h/wedding
+# First start pulls the Docker images, which can take a while.
+TimeoutStartSec=900
+ExecStart=/usr/bin/npx --yes supabase@3.0.0 start
+# `stop` keeps the data volume (only --no-backup would drop it).
+ExecStop=/usr/bin/npx --yes supabase@3.0.0 stop
+# Docker (a system service) may not be up yet at boot; keep retrying.
+Restart=on-failure
+RestartSec=30
+
+[Install]
+WantedBy=default.target

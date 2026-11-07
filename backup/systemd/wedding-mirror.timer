@@ -1,0 +1,11 @@
+[Unit]
+Description=Sync the wedding guest list every minute
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=1min
+AccuracySec=5s
+Persistent=true
+
+[Install]
+WantedBy=timers.target

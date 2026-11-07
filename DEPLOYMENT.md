@@ -214,3 +214,17 @@ _Add entries as `YYYY-MM-DD — who/agent — what was done / what's blocked._
   as a personal backup, or consider Supabase Pro closer to the wedding for
   real backup coverage; don't back up guest data into this repo, it's
   public.
+- 2026-11-07 — Claude — **Added a live backup mirror on Parker's OptiPlex**
+  (`backup/`, see `backup/README.md`). A systemd user timer pulls
+  `parties` + `guests` from hosted every minute via the Management API into
+  the local Docker Supabase stack, and writes a timestamped snapshot to
+  `~/wedding-backups/` (outside the public repo) whenever hosted data
+  changes. Restore to local or hosted with `backup/mirror.py restore`.
+  Pushes a phone alert via Armen's Tether after 5 failed syncs in a row.
+  Remote work from the laptop: Tailscale SSH + `claude` in tmux. Setup
+  complete and verified (first snapshot 2026-11-07T20:02Z, 119 guests,
+  units enabled and survived a reboot). Found the hosted project
+  **paused** (`INACTIVE`) during setup: no commits since 2026-07-26 meant
+  GitHub had likely auto-disabled the scheduled keep-awake/backup workflows
+  after 60 days. Parker restored it; re-enable both workflows in the
+  Actions tab. The one-minute mirror sync now also keeps the project awake.
