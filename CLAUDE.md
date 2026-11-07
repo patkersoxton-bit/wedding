@@ -55,6 +55,7 @@ and RSVP data outright instead of handing it to a third party.
 │   └── charts.js        # hand-rolled SVG pie/meter charts for the dashboard
 ├── backup/              # live mirror + snapshot history on the OptiPlex (see backup/README.md)
 │   ├── mirror.py        # sync/status/restore; data goes to ~/wedding-backups, never the repo
+│   ├── HANDOFF.md       # remote-dev + debugging context for this setup (start here)
 │   ├── install.sh       # installs the systemd user units below
 │   └── systemd/         # wedding-supabase.service, wedding-mirror.{service,timer}
 ├── supabase/
