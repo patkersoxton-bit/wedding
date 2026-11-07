@@ -83,8 +83,13 @@ On the laptop: install Tailscale, sign in with the same account
 (parkersexton@), then:
 
 ```bash
-ssh -t parker@parker-optiplex-7060 'tmux new -A -s wedding -c ~/wedding claude'
+ssh -t parker@parker-optiplex-7060.tail0ec459.ts.net "tmux new -A -s wedding -c ~/wedding 'bash -lc claude'"
 ```
+
+Use the full `.ts.net` name. The bare hostname can resolve over the home
+LAN instead, which goes to OpenSSH and asks for a password rather than
+using Tailscale SSH. `bash -lc` matters: a command passed to ssh skips
+`~/.profile`, so `~/.local/bin/claude` isn't on PATH without it.
 
 That attaches to a persistent `claude` session in `~/wedding` that survives
 the laptop closing; detach with `Ctrl-b d`. Tailscale's default policy may
