@@ -264,13 +264,20 @@ section {
   gap: var(--space-md);
 }
 
+.hero__art img,
 .hero__art svg {
   max-width: 100%;
   height: auto;
+  display: block;
 }
 
-.hero__cake { width: 62%; }
-.hero__sprig { width: 26%; }
+.hero__cake { width: 85%; }
+
+.hero__forgetmenot {
+  width: 90px;
+  height: auto;
+  margin-top: var(--space-md);
+}
 
 .hero__eyebrow {
   font-family: var(--font-body);
@@ -404,17 +411,26 @@ section {
   color: var(--color-text-soft);
 }
 
-/* reveal-on-scroll targets */
+/* reveal-on-scroll targets — a soft "pop": fade + rise + slight scale-up,
+   with a small overshoot in the easing curve so it settles with a bounce
+   rather than a flat linear stop. */
 .reveal {
   opacity: 0;
-  transform: translateY(28px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
+  transform: translateY(28px) scale(0.94);
+  transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .reveal.is-visible {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
 }
+
+/* stagger utilities — apply alongside .reveal so several elements in the
+   same section pop in one after another instead of all at once */
+.reveal--d1 { transition-delay: 0.1s; }
+.reveal--d2 { transition-delay: 0.2s; }
+.reveal--d3 { transition-delay: 0.32s; }
+.reveal--d4 { transition-delay: 0.44s; }
 
 /* ---------- welcome band (flat color block, no card) ---------- */
 
@@ -428,6 +444,12 @@ section {
   max-width: 640px;
   margin: 0 auto;
   position: relative;
+}
+
+.welcome-band__art {
+  width: 150px;
+  height: auto;
+  margin: 0 auto var(--space-md);
 }
 
 .welcome-band h2 {
@@ -504,6 +526,12 @@ section {
   color: var(--color-text);
   font-family: var(--font-heading);
   font-size: 1.1rem;
+}
+
+.story__accent {
+  width: 130px;
+  height: auto;
+  margin-top: var(--space-md);
 }
 
 @media (max-width: 800px) {
@@ -601,9 +629,161 @@ section {
   grid-row: span 2;
 }
 
+.gallery__item.reveal:nth-child(4n+1) { transition-delay: 0s; }
+.gallery__item.reveal:nth-child(4n+2) { transition-delay: 0.08s; }
+.gallery__item.reveal:nth-child(4n+3) { transition-delay: 0.16s; }
+.gallery__item.reveal:nth-child(4n+4) { transition-delay: 0.24s; }
+
 @media (max-width: 900px) {
   .gallery__grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ---------- travel page ---------- */
+
+.travel-block {
+  padding: var(--space-xl) 0;
+  overflow: hidden;
+}
+
+.travel-block .container {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  align-items: center;
+  gap: var(--space-lg);
+}
+
+.travel-block--reverse .container {
+  grid-template-columns: 0.9fr 1.1fr;
+}
+
+.travel-block--reverse .travel-block__text { order: 2; }
+.travel-block--reverse .travel-block__art { order: 1; }
+
+.travel-block--amber { background: var(--gold); }
+.travel-block--blue { background: var(--sky); }
+
+.travel-block h2 {
+  font-family: var(--font-script);
+  font-weight: 400;
+  font-size: clamp(2.4rem, 5vw, 3.4rem);
+  margin-bottom: var(--space-md);
+}
+
+.travel-block--amber h2 { color: var(--amber-ink); }
+.travel-block--blue h2 { color: var(--sky-ink); }
+
+.travel-block h3 {
+  font-family: var(--font-script);
+  font-weight: 400;
+  font-size: 1.8rem;
+  margin-bottom: var(--space-sm);
+}
+
+.travel-block--amber h3 { color: var(--amber-ink); }
+.travel-block--blue h3 { color: var(--sky-ink); }
+
+.travel-block ul {
+  margin: 0.5rem 0 0;
+  padding-left: 1.2rem;
+}
+
+.travel-block li {
+  margin-bottom: 0.4rem;
+}
+
+.travel-block__art {
+  display: flex;
+  justify-content: center;
+}
+
+.travel-block__art img {
+  max-width: 100%;
+  height: auto;
+  width: 80%;
+}
+
+@media (max-width: 800px) {
+  .travel-block .container,
+  .travel-block--reverse .container {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .travel-block--reverse .travel-block__text,
+  .travel-block--reverse .travel-block__art {
+    order: initial;
+  }
+
+  .travel-block__art img {
+    width: 60%;
+  }
+}
+
+/* ---------- full-bleed proposal photo ---------- */
+
+.full-photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* ---------- contact (pink banner + cream info) ---------- */
+
+.contact-banner {
+  background: var(--salmon);
+  padding: var(--space-lg) 0;
+}
+
+.contact-banner p {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: clamp(1.3rem, 3vw, 1.7rem);
+  color: var(--rose-ink);
+  margin: 0;
+}
+
+.contact-info {
+  background: var(--cream);
+  padding: var(--space-xl) 0;
+}
+
+.contact-info__grid {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: var(--space-lg);
+  align-items: center;
+}
+
+.contact-info__name {
+  display: inline-block;
+  font-family: var(--font-script);
+  font-weight: 400;
+  font-size: 2rem;
+  color: var(--amber-ink);
+  background: var(--gold);
+  padding: 0.1em 0.5em;
+  border-radius: 4px;
+  transform: rotate(-2deg);
+  margin-bottom: var(--space-md);
+}
+
+.contact-info__person p {
+  margin: 0 0 var(--space-md);
+  color: var(--color-text);
+}
+
+.contact-info__art {
+  width: 110px;
+  height: auto;
+  justify-self: center;
+}
+
+@media (max-width: 700px) {
+  .contact-info__grid {
+    grid-template-columns: 1fr;
+    text-align: center;
   }
 }
 
@@ -650,6 +830,12 @@ section {
 
 .rsvp-cta {
   text-align: center;
+}
+
+.rsvp-art {
+  width: 90px;
+  height: auto;
+  margin: 0 auto var(--space-md);
 }
 
 /* flat cream sign panel with a highlighter-marker script line, echoing the
@@ -734,36 +920,6 @@ section {
   color: var(--color-primary);
   border: 2px solid var(--color-primary);
   box-shadow: none;
-}
-
-/* ---------- Canva-embed homepage ---------- */
-
-.canva-embed-page {
-  padding-top: 4rem;
-  background: var(--cream);
-}
-
-.canva-embed {
-  position: relative;
-  width: 100%;
-  height: calc(100vh - 4rem);
-  overflow: hidden;
-}
-
-.canva-embed iframe {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  border: none;
-}
-
-.canva-embed-credit {
-  display: block;
-  text-align: center;
-  padding: 0.4rem;
-  color: var(--color-text-soft);
-  font-size: 0.75rem;
 }
 
 /* ---------- RSVP page ---------- */

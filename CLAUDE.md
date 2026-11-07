@@ -90,15 +90,31 @@ for the anon role; only authenticated admin users get direct table access.
   `responded_at`, `extra` (jsonb, for fields added later)
 
 **Guest flow** (`rsvp.html` / `js/rsvp.js`)
-1. Search by name → RPC `search_guests(name)` returns only
-   `first_name, last_name, party_name, party_id` — never full guest rows.
-2. Guest picks their party → RPC `get_party_members(party_id)` returns only
-   that party's `invited = true` members.
-3. Guest submits responses for the whole party in one call → RPC
-   `submit_rsvp(party_id, responses[])`, which validates server-side that
-   every guest id in the payload belongs to `party_id` before writing. This
-   validation is the actual enforcement point for "can't RSVP on behalf of
-   people outside your party" — never rely on the client for it.
+1. Guest enters their first + last name exactly and submits (not a
+   live/typeahead search) → RPC `find_invitation(first_name, last_name)`
+   does an exact, case-insensitive match and returns at most a handful of
+   rows — never a broader list. There used to be a `search_guests(name)`
+   ILIKE-partial-match RPC here; it was removed (not just replaced in the
+   frontend) because it let anyone with the public anon key enumerate the
+   entire guest list by calling the RPC directly from a browser console,
+   regardless of what the UI did. Don't reintroduce partial/prefix matching
+   on a guest-facing RPC.
+2. If the matched guest has a `party_id` → RPC `get_party_members(party_id)`
+   returns only that party's `invited = true` members, and submission goes
+   through `submit_rsvp(party_id, responses[])`, which validates
+   server-side that every guest id in the payload belongs to `party_id`
+   before writing — the actual enforcement point for "can't RSVP on behalf
+   of people outside your party," never rely on the client for it.
+   If the matched guest has no `party_id` yet (common until parties are
+   manually assigned in the admin dashboard — see `supabase/seed.sql`),
+   `find_invitation` already returned that guest's own fields, so the page
+   shows just their own row and submits via
+   `submit_solo_rsvp(guest_id, ...)` instead — guarded server-side to only
+   ever update a guest whose `party_id` is still null.
+3. `find_invitation` can return more than one row only when two *invited*
+   guests share the exact typed name (e.g. two "Mike Motyka" on the current
+   list) — in that case the guest picks between just those exact matches,
+   never anyone else.
 
 **Admin dashboard** (`admin.html` / `js/admin.js`)
 - Gated by a single shared master password (currently `admin`, for ease of
