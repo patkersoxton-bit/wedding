@@ -85,7 +85,7 @@ NAV = [('index.html', 'Home'), ('floral.html', 'Floral'), ('venue.html', 'Venue'
 
 def page_html(page, filename, title, desc):
     nav = '\n'.join(
-        f'      <li><a href="{href}"{" aria-current=\"page\"" if href == filename else ""}>{label}</a></li>'
+        f'        <li><a href="{href}"{" aria-current=\"page\"" if href == filename else ""}>{label}</a></li>'
         for href, label in NAV)
     bands = '\n\n'.join(band_html(page, b) for b in L[page]['bands'])
     return f'''<!DOCTYPE html>
@@ -105,11 +105,14 @@ def page_html(page, filename, title, desc):
 </head>
 <body>
 
-  <nav class="cv-menu" aria-label="Main">
-    <button class="cv-menu__btn" type="button" aria-expanded="false" aria-controls="cv-menu-list"><span class="cv-menu__bars" aria-hidden="true"></span>Menu</button>
-    <ul class="cv-menu__list" id="cv-menu-list">
+  <nav class="site-nav" aria-label="Main">
+    <div class="container">
+      <a href="index.html" class="site-nav__logo" aria-label="Home"><img src="assets/images/design/monogram-wreath.webp" alt=""></a>
+      <button class="site-nav__toggle" type="button" aria-label="Toggle navigation" aria-expanded="false" aria-controls="site-nav-links">&#9776;</button>
+      <ul class="site-nav__links" id="site-nav-links">
 {nav}
-    </ul>
+      </ul>
+    </div>
   </nav>
 
   <main>

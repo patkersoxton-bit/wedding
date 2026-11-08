@@ -192,9 +192,12 @@ restyle, re-letter, or "improve" them. How they're built:
 3. `css/canva.css` + `js/canva.js`: each band animates in once on scroll
    (handwriting wipes, stems growing, plane flying in, photo wipes, gentle
    flower sway). Animations use `fill-mode: backwards` so every layer
-   returns to its exact resting pixels; nothing animates under
-   `prefers-reduced-motion`.
-The only addition on top of the design is the floating "Menu" pill.
+   returns to its exact resting pixels. A band animates only once its
+   images have loaded. Entrances play even under `prefers-reduced-motion`
+   (Parker wants guests to see them; many Windows machines report reduce);
+   only the continuous sway is skipped there.
+The only addition on top of the design is the site header (same `.site-nav` as
+the floral pages), which sits above the artwork rather than over it.
 To update: re-export from Canva at 1366px width into `FINAL/`, re-run
 `py -I slice.py <FINAL> <out>` (adjust element rects if the layout moved),
 copy layers into `assets/images/canva/final/`, then `py -I build_pages.py`.
