@@ -19,14 +19,16 @@ const FOOD_OPTIONS = ['', 'Chicken', 'Beef', 'Fish', 'Vegetarian'];
 const TITLE_OPTIONS = ['', 'Mr.', 'Mrs.', 'Ms.', 'Mx.', 'Dr.', 'Miss'];
 const RSVP_OPTIONS = ['pending', 'yes', 'no'];
 
-// Chart colors: deepened, CVD-checked inks from the site palette. Fixed per
-// category, never reassigned by value.
+// Chart colors: deepened versions of the Design_Language palette (moss,
+// rose, delphinium, marigold, coral) so small marks keep contrast on the
+// paper background. Fixed per category, never reassigned by value.
 const CHART_COLORS = {
-  rose: '#bf2859',
-  amber: '#c97f0c',
-  olive: '#74712f',
-  sky: '#4f7d9c',
-  gray: '#b3ab9c',
+  moss: '#4a6a30',
+  rose: '#b8466f',
+  sky: '#1f7c97',
+  gold: '#c48a1c',
+  coral: '#c85a3f',
+  gray: '#b9b2a2',
 };
 
 const SMS_LINK_KEY = 'pj_admin_sms_link';
@@ -464,7 +466,7 @@ function renderCharts(invited, yes, no, pending) {
     buildPieCard({
       title: 'RSVP responses',
       slices: [
-        { label: 'Attending', value: yes, color: CHART_COLORS.olive },
+        { label: 'Attending', value: yes, color: CHART_COLORS.moss },
         { label: 'Declined', value: no, color: CHART_COLORS.rose },
         { label: 'Awaiting response', value: pending, color: CHART_COLORS.sky },
       ],
@@ -481,10 +483,10 @@ function renderCharts(invited, yes, no, pending) {
     buildPieCard({
       title: 'Meal preference',
       slices: [
-        { label: 'Chicken', value: meals.Chicken, color: CHART_COLORS.amber },
-        { label: 'Beef', value: meals.Beef, color: CHART_COLORS.rose },
+        { label: 'Chicken', value: meals.Chicken, color: CHART_COLORS.gold },
+        { label: 'Beef', value: meals.Beef, color: CHART_COLORS.coral },
         { label: 'Fish', value: meals.Fish, color: CHART_COLORS.sky },
-        { label: 'Vegetarian', value: meals.Vegetarian, color: CHART_COLORS.olive },
+        { label: 'Vegetarian', value: meals.Vegetarian, color: CHART_COLORS.moss },
         { label: 'Not selected', value: noMeal, color: CHART_COLORS.gray },
       ],
     })
@@ -494,8 +496,8 @@ function renderCharts(invited, yes, no, pending) {
       title: 'Response rate',
       value: yes + no,
       total: invited.length,
-      color: CHART_COLORS.rose,
-      trackColor: '#efe6d8',
+      color: CHART_COLORS.moss,
+      trackColor: '#f4ecdf',
     })
   );
 }

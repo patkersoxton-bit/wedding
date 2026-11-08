@@ -50,8 +50,8 @@ and RSVP data outright instead of handing it to a third party.
 ├── admin.html          # planner dashboard (auth-gated)
 ├── css/
 │   ├── site.css        # public-page design system: tokens, fonts, components
-│   ├── style.css       # legacy theme, now used only by admin.html
-│   └── admin.css       # admin-only dashboard styles (self-contained)
+│   ├── style.css       # legacy theme — no longer loaded by any page
+│   └── admin.css       # admin-only dashboard styles, layered on site.css tokens
 ├── js/
 │   ├── site-config.js   # SITE_PHASE switch (1 = save the date, 2 = RSVP live)
 │   ├── gate.js          # client-side site password gate (deterrent, not security)
@@ -208,8 +208,9 @@ painted stems flanking the hero, the wide flower basket above the footer.
 
 **Image rules**: `assets/images/inspiration/` (old Pinterest board) is
 reference only — never embed it. The old bright-boho palette (Copper/Golden
-Hour/Apricot…) and Caveat/Fraunces/Poppins fonts are retired for public
-pages; `css/style.css` still carries them for the admin dashboard only.
+Hour/Apricot…) and Caveat/Fraunces/Poppins fonts are retired everywhere.
+The admin dashboard now uses `css/site.css` + `css/admin.css`, so
+`css/style.css` is no longer loaded by any page (safe to delete).
 
 ## Open questions / not yet decided
 
