@@ -12,9 +12,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="css/style.css">
+  <!-- Admin-only styles live in their own file so the public-site redesign
+       of style.css can't break the dashboard (and vice versa). -->
+  <link rel="stylesheet" href="css/admin.css">
   <script src="js/gate.js"></script>
 </head>
-<body>
+<body class="admin-body">
 
   <nav class="site-nav">
     <div class="container">
@@ -27,112 +30,192 @@
     </div>
   </nav>
 
-  <section class="admin-page">
-    <div class="container">
+  <main class="admin-page">
+    <div class="admin-container">
 
-      <div id="admin-login" class="rsvp-card">
-        <h2>Planner Login</h2>
+      <div id="admin-login" class="admin-login" hidden>
+        <h1>Planner Login</h1>
         <form id="login-form">
-          <label class="rsvp-label" for="login-password">Master Password</label>
+          <label class="admin-label" for="login-password">Master password</label>
           <input type="password" id="login-password" required autocomplete="current-password">
-          <button type="submit" class="btn">Log in</button>
-          <p id="login-error" class="alert-error" role="alert" hidden></p>
+          <button type="submit" class="admin-btn admin-btn--primary">Log in</button>
+          <p id="login-error" class="admin-alert" role="alert" hidden></p>
         </form>
       </div>
 
       <div id="admin-dashboard" hidden>
-        <div class="section-heading" style="text-align:left; margin-bottom: var(--space-md);">
-          <h2>Planner Dashboard</h2>
-        </div>
+        <header class="admin-header">
+          <h1>Planner Dashboard</h1>
+          <div class="admin-header__actions">
+            <span id="last-loaded" class="admin-hint"></span>
+            <button type="button" id="refresh-btn" class="admin-btn">Refresh</button>
+          </div>
+        </header>
 
-        <p id="dashboard-error" class="alert-error" role="alert" hidden></p>
+        <p id="dashboard-error" class="admin-alert" role="alert" hidden></p>
 
         <div class="admin-tabs" role="tablist">
           <button type="button" class="admin-tab is-active" data-tab="overview" role="tab" aria-selected="true">Overview</button>
-          <button type="button" class="admin-tab" data-tab="database" role="tab" aria-selected="false">Guest Database</button>
+          <button type="button" class="admin-tab" data-tab="guests" role="tab" aria-selected="false">Guests</button>
+          <button type="button" class="admin-tab" data-tab="parties" role="tab" aria-selected="false">Parties <span class="admin-badge" id="badge-unassigned" hidden></span></button>
+          <button type="button" class="admin-tab" data-tab="phones" role="tab" aria-selected="false">Phones &amp; Texting</button>
+          <button type="button" class="admin-tab" data-tab="inbox" role="tab" aria-selected="false">Address Inbox <span class="admin-badge" id="badge-inbox" hidden></span></button>
         </div>
 
-        <div id="tab-overview" class="admin-tab-panel">
+        <!-- ============ Overview ============ -->
+        <section id="tab-overview" class="admin-tab-panel">
+          <div class="admin-steps" id="admin-steps"></div>
           <div class="admin-stats" id="admin-stats"></div>
-
           <div class="chart-row" id="chart-row"></div>
-        </div>
+        </section>
 
-        <div id="tab-database" class="admin-tab-panel" hidden>
+        <!-- ============ Guests ============ -->
+        <section id="tab-guests" class="admin-tab-panel" hidden>
           <div class="admin-panel">
-            <h3>Add Party</h3>
-            <form id="add-party-form" class="admin-inline-form">
-              <input type="text" id="new-party-name" placeholder="Party name (e.g. The Motyka Family)" required>
-              <button type="submit" class="btn btn--outline">Add Party</button>
-            </form>
-          </div>
-
-          <div class="admin-panel">
-            <h3>Add Guest</h3>
+            <h2>Add a guest</h2>
             <form id="add-guest-form" class="admin-inline-form">
-              <select id="new-guest-party" required></select>
-              <input type="text" id="new-guest-first" placeholder="First name" required>
-              <input type="text" id="new-guest-last" placeholder="Last name" required>
-              <label><input type="checkbox" id="new-guest-invited" checked> Invited</label>
-              <button type="submit" class="btn btn--outline">Add Guest</button>
+              <select id="new-guest-title" aria-label="Title"></select>
+              <input type="text" id="new-guest-first" placeholder="First name" required aria-label="First name">
+              <input type="text" id="new-guest-last" placeholder="Last name" aria-label="Last name">
+              <input type="text" id="new-guest-party" list="party-options" placeholder="Party (optional)" aria-label="Party">
+              <input type="tel" id="new-guest-phone" placeholder="Phone (optional)" aria-label="Phone">
+              <label class="admin-check"><input type="checkbox" id="new-guest-invited" checked> Invited</label>
+              <button type="submit" class="admin-btn admin-btn--primary">Add guest</button>
             </form>
           </div>
 
           <div class="admin-panel">
             <div class="admin-panel__header">
-              <h3>Guest Database</h3>
-              <p class="rsvp-hint" style="margin: 0;">Every field stored per guest — edit any cell directly, or delete a row.</p>
+              <div>
+                <h2>Guest list</h2>
+                <p class="admin-hint">Edit any cell — changes save as soon as you leave the field. Tick rows to move several guests into a party at once.</p>
+              </div>
               <div class="admin-panel__header-actions">
-                <button id="export-csv" class="btn btn--outline" type="button">Export CSV (Zola format)</button>
-                <button id="export-csv-shutterfly" class="btn btn--outline" type="button">Export CSV (Shutterfly format)</button>
+                <button id="export-csv" class="admin-btn" type="button">Export CSV (Zola)</button>
+                <button id="export-csv-shutterfly" class="admin-btn" type="button">Export CSV (Shutterfly)</button>
               </div>
             </div>
+
             <div class="admin-filter-bar">
-              <input type="search" id="guest-search" placeholder="Search by guest or party name&hellip;" aria-label="Search guests">
+              <input type="search" id="guest-search" placeholder="Search name, party, phone, email&hellip;" aria-label="Search guests">
+              <div class="admin-chips" id="quick-filters" role="group" aria-label="Quick filters"></div>
               <select id="filter-field" aria-label="Filter by field">
-                <option value="">Filter by field&hellip;</option>
+                <option value="">More filters&hellip;</option>
               </select>
               <select id="filter-value" aria-label="Filter value" hidden></select>
-              <button type="button" id="filter-clear" class="admin-filter-clear" hidden>Clear</button>
-              <span id="guest-count" class="rsvp-hint"></span>
+              <button type="button" id="filter-clear" class="admin-btn admin-btn--ghost" hidden>Clear filters</button>
+              <span id="guest-count" class="admin-hint"></span>
             </div>
-            <datalist id="party-options"></datalist>
+
+            <div class="admin-bulk-bar" id="bulk-bar" hidden>
+              <strong id="bulk-count"></strong>
+              <input type="text" id="bulk-party" list="party-options" placeholder="Party name" aria-label="Party to move selected guests into">
+              <button type="button" class="admin-btn admin-btn--primary" id="bulk-assign">Move to party</button>
+              <button type="button" class="admin-btn" id="bulk-unassign">Remove from party</button>
+              <button type="button" class="admin-btn" id="bulk-invite">Mark invited</button>
+              <button type="button" class="admin-btn" id="bulk-uninvite">Mark not invited</button>
+              <button type="button" class="admin-btn admin-btn--ghost" id="bulk-clear">Clear selection</button>
+            </div>
+
             <div class="admin-table-wrap">
-              <table class="admin-table" id="guest-table">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Party</th>
-                    <th>Title</th>
-                    <th>First</th>
-                    <th>Last</th>
-                    <th>Invited</th>
-                    <th>RSVP</th>
-                    <th>Meal</th>
-                    <th>Dietary Notes</th>
-                    <th>Address 1</th>
-                    <th>Address 2</th>
-                    <th>City</th>
-                    <th>State</th>
-                    <th>Postal</th>
-                    <th>Country</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                    <th>Extra (JSON)</th>
-                    <th>Responded</th>
-                    <th>Created</th>
-                    <th></th>
-                  </tr>
-                </thead>
+              <table class="admin-table admin-table--guests" id="guest-table">
+                <thead id="guest-table-head"></thead>
                 <tbody id="guest-table-body"></tbody>
               </table>
             </div>
           </div>
-        </div>
+        </section>
+
+        <!-- ============ Parties ============ -->
+        <section id="tab-parties" class="admin-tab-panel" hidden>
+          <div class="admin-panel">
+            <h2>Add a party</h2>
+            <p class="admin-hint">A party is one household / invitation — everyone in it RSVPs together and gets one envelope.</p>
+            <form id="add-party-form" class="admin-inline-form">
+              <input type="text" id="new-party-name" placeholder="Party name (e.g. The Motyka Family)" required aria-label="Party name">
+              <button type="submit" class="admin-btn admin-btn--primary">Add party</button>
+            </form>
+          </div>
+
+          <div class="admin-panel" id="suggest-panel">
+            <h2>Group unassigned guests</h2>
+            <p class="admin-hint">Guests with no party yet, grouped by last name. Untick anyone who isn't in that household, adjust the name, then create the party.</p>
+            <div id="suggest-list" class="admin-suggest-list"></div>
+          </div>
+
+          <div class="admin-panel">
+            <div class="admin-panel__header">
+              <h2>Parties</h2>
+              <input type="search" id="party-search" placeholder="Search parties or members&hellip;" aria-label="Search parties">
+            </div>
+            <div id="party-list" class="admin-party-list"></div>
+          </div>
+        </section>
+
+        <!-- ============ Phones & texting ============ -->
+        <section id="tab-phones" class="admin-tab-panel" hidden>
+          <div class="admin-panel">
+            <h2>Import phone numbers</h2>
+            <p class="admin-hint">Paste one guest per line as <code>First Last, phone</code> (or <code>First, Last, phone</code>), or choose a CSV with First / Last / Phone columns. Names are matched exactly (case-insensitive). Nothing is saved until you review the preview and click Save.</p>
+            <textarea id="phone-import-text" rows="6" placeholder="Jolan Motyka, (555) 123-4567&#10;Parker, Sexton, 555.987.6543"></textarea>
+            <div class="admin-inline-form">
+              <input type="file" id="phone-import-file" accept=".csv,text/csv,text/plain" aria-label="CSV file">
+              <button type="button" class="admin-btn" id="phone-import-preview">Preview matches</button>
+            </div>
+            <div id="phone-import-result"></div>
+          </div>
+
+          <div class="admin-panel">
+            <h2>Text the address link</h2>
+            <p class="admin-hint">Use <code>{first}</code>, <code>{name}</code> and <code>{link}</code> in the message. The address page doesn't need the site password. "Text" opens your phone's messaging app (works from a phone, or a Mac with Messages) and marks the guest as texted.</p>
+            <div class="admin-form-grid">
+              <label class="admin-label" for="sms-link">Address page link</label>
+              <input type="url" id="sms-link">
+              <label class="admin-label" for="sms-template">Message</label>
+              <textarea id="sms-template" rows="3"></textarea>
+            </div>
+            <div class="admin-filter-bar">
+              <label class="admin-check"><input type="checkbox" id="sms-only-missing" checked> Only guests without an address yet</label>
+              <label class="admin-check"><input type="checkbox" id="sms-hide-texted"> Hide guests already texted</label>
+              <span id="sms-count" class="admin-hint"></span>
+              <button type="button" class="admin-btn" id="sms-export">Export list (CSV)</button>
+            </div>
+            <div class="admin-table-wrap">
+              <table class="admin-table">
+                <thead><tr><th>Guest</th><th>Party</th><th>Phone</th><th>Message</th><th>Texted</th><th></th></tr></thead>
+                <tbody id="sms-table-body"></tbody>
+              </table>
+            </div>
+            <p class="admin-hint" id="sms-missing-phone"></p>
+          </div>
+        </section>
+
+        <!-- ============ Address inbox ============ -->
+        <section id="tab-inbox" class="admin-tab-panel" hidden>
+          <div class="admin-panel">
+            <h2>Address submissions to review</h2>
+            <p class="admin-hint">Each submission from the address page waits here until you apply it to a guest. The suggested match uses the phone number first, then the exact name — check it before applying.</p>
+            <div id="inbox-list" class="admin-inbox-list"></div>
+          </div>
+          <details class="admin-panel admin-history">
+            <summary>Reviewed submissions <span id="inbox-history-count" class="admin-hint"></span></summary>
+            <div class="admin-table-wrap">
+              <table class="admin-table">
+                <thead><tr><th>Submitted</th><th>Name</th><th>Household</th><th>Address</th><th>Status</th><th>Applied to</th><th></th></tr></thead>
+                <tbody id="inbox-history-body"></tbody>
+              </table>
+            </div>
+          </details>
+        </section>
+
+        <datalist id="party-options"></datalist>
+        <datalist id="guest-options"></datalist>
       </div>
 
     </div>
-  </section>
+  </main>
+
+  <div class="admin-toast" id="admin-toast" role="status" aria-live="polite" hidden></div>
 
   <footer class="site-footer">
     <div class="site-footer__names">Parker &amp; Jolan</div>

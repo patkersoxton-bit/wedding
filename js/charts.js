@@ -3,6 +3,7 @@
 // Colors are deepened, CVD-validated variants of the site's brand hues (the
 // soft pastel theme palette fails contrast/chroma checks for small identity
 // marks — see CLAUDE.md). Order is fixed per chart, never data-dependent.
+import { escapeHtml } from './escape.js';
 
 function polarToCartesian(cx, cy, r, angle) {
   return [cx + r * Math.cos(angle), cy + r * Math.sin(angle)];
@@ -86,8 +87,8 @@ export function buildPieCard({ title, slices, unit = '' }) {
   slices.forEach((s) => {
     const pct = total ? Math.round((s.value / total) * 100) : 0;
     const li = document.createElement('li');
-    li.innerHTML = `<span class="chart-legend__swatch" style="background:${s.color}"></span>
-      <span class="chart-legend__label">${s.label}</span>
+    li.innerHTML = `<span class="chart-legend__swatch" style="background:${escapeHtml(s.color)}"></span>
+      <span class="chart-legend__label">${escapeHtml(s.label)}</span>
       <span class="chart-legend__value">${s.value}${unit} (${pct}%)</span>`;
     legend.appendChild(li);
   });
@@ -143,7 +144,9 @@ export function buildMeterCard({ title, value, total, color, trackColor }) {
   fill.setAttribute('stroke-linecap', 'round');
   fill.setAttribute('stroke-dasharray', `${circumference * pct} ${circumference}`);
   fill.setAttribute('transform', `rotate(-90 ${size / 2} ${size / 2})`);
-  svg.appendChild(fill);
+  // A round linecap on a zero-length dash still paints a dot, so skip the
+  // fill arc entirely at 0%.
+  if (pct > 0) svg.appendChild(fill);
 
   const text = document.createElementNS(svgNS, 'text');
   text.setAttribute('x', '50%');
@@ -183,7 +186,7 @@ function buildTableToggle(slices, unit) {
       ${slices
         .map((s) => {
           const pct = total ? Math.round((s.value / total) * 100) : 0;
-          return `<tr><td>${s.label}</td><td>${s.value}${unit}</td><td>${pct}%</td></tr>`;
+          return `<tr><td>${escapeHtml(s.label)}</td><td>${s.value}${unit}</td><td>${pct}%</td></tr>`;
         })
         .join('')}
     </tbody>
