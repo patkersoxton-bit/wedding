@@ -42,20 +42,23 @@ and RSVP data outright instead of handing it to a third party.
 
 ```
 /
-├── index.html          # Home (save the date, weekend, contact)
+├── index.html          # Home — GENERATED pixel-exact Canva page (FINAL/1.png)
+├── travel.html         # Travel — GENERATED pixel-exact Canva page (FINAL/2.png)
+├── floral.html         # previous hand-built floral home, kept live as the "Floral" tab
 ├── venue.html          # Venue (painted farm map)
-├── travel.html         # Travel (airports, lodging)
 ├── rsvp.html           # RSVP — phase 1 "coming soon", phase 2 lookup + response
 ├── address.html        # pre-invite address collector — standalone, unlinked, noindex
 ├── admin.html          # planner dashboard (auth-gated)
 ├── css/
-│   ├── site.css        # public-page design system: tokens, fonts, components
+│   ├── canva.css       # Canva pages: layered bands, floating menu, entrance animations
+│   ├── site.css        # floral design system (floral/venue/rsvp/address): tokens, fonts, components
 │   ├── style.css       # legacy theme — no longer loaded by any page
 │   └── admin.css       # admin-only dashboard styles, layered on site.css tokens
 ├── js/
 │   ├── site-config.js   # SITE_PHASE switch (1 = save the date, 2 = RSVP live)
 │   ├── gate.js          # client-side site password gate (deterrent, not security)
-│   ├── main.js          # nav, scroll reveals, countdown
+│   ├── canva.js         # Canva pages: band in-view triggers + floating menu
+│   ├── main.js          # nav, scroll reveals, countdown (site.css pages)
 │   ├── supabase-client.js  # shared Supabase client init (URL + anon key)
 │   ├── escape.js        # escapeHtml() — required for any DB value rendered via innerHTML
 │   ├── rsvp.js          # rsvp.html logic (exact-name lookup, party, submit)
@@ -73,17 +76,20 @@ and RSVP data outright instead of handing it to a third party.
 │   └── seed.sql         # local prototype seed data
 ├── assets/
 │   ├── Design_Language/  # SOURCE artwork + font zips from Parker (not deployed)
+│   │   └── FINAL/        # approved Canva exports 1.png (home) + 2.png (travel), slice.py, build_pages.py
 │   ├── images/
 │   │   ├── design/       # web-ready derivatives of Design_Language (deployed)
 │   │   │   └── florals/  # individual stems split from 1flowers.png
-│   │   ├── canva/elements/  # Canva export (couple photos used on Home)
+│   │   ├── canva/final/  # per-element layers sliced from FINAL/*.png (Canva pages)
+│   │   ├── canva/elements/  # older Canva export (couple photos used on floral.html)
 │   │   ├── photos/       # proposal photos (not currently deployed)
 │   │   └── inspiration/  # old Pinterest references (never deployed)
 │   └── fonts/           # self-hosted WOFF2 (Latin subset) + licenses/
 └── CLAUDE.md
 ```
 
-Phase 1 nav is exactly Home / Venue / Travel / RSVP. New public pages live at
+Nav is Home / Floral / Venue / Travel / RSVP (Floral = the previous
+hand-built home, kept live as its own tab for now). New public pages live at
 the root, use `css/site.css` + `js/site-config.js` + `js/gate.js` +
 `js/main.js`, and copy the nav/footer markup from an existing page.
 
@@ -169,6 +175,31 @@ for the anon role; only authenticated admin users get direct table access.
   members, it doesn't delete them.
 - Some guests are first-name-only (`last_name = ''`, e.g. "Zoe's
   Boyfriend"); the column is NOT NULL so blank is stored as `''`.
+
+## Canva pages (Home + Travel) — must match Canva exactly
+
+`index.html` and `travel.html` reproduce the approved Canva designs in
+`assets/Design_Language/FINAL/1.png` and `2.png` **pixel-for-pixel**; do not
+restyle, re-letter, or "improve" them. How they're built:
+1. `FINAL/slice.py` cuts each design into flat-color bands and per-element
+   transparent layers (exact RGB, anti-aliased edges kept) into
+   `assets/images/canva/final/`, verifying that recomposition equals the
+   export, and writes `FINAL/layout.json`.
+2. `FINAL/build_pages.py` generates both HTML files from `layout.json`
+   (positions in container-width units so layers land on whole pixels at
+   the native 1366px width), plus screen-reader text and tel/mailto click
+   targets over the contact text. **Edit the generator, not the HTML.**
+3. `css/canva.css` + `js/canva.js`: each band animates in once on scroll
+   (handwriting wipes, stems growing, plane flying in, photo wipes, gentle
+   flower sway). Animations use `fill-mode: backwards` so every layer
+   returns to its exact resting pixels; nothing animates under
+   `prefers-reduced-motion`.
+The only addition on top of the design is the floating "Menu" pill.
+To update: re-export from Canva at 1366px width into `FINAL/`, re-run
+`py -I slice.py <FINAL> <out>` (adjust element rects if the layout moved),
+copy layers into `assets/images/canva/final/`, then `py -I build_pages.py`.
+Known trade-off: the design scales down proportionally on phones (text gets
+small) because it must match Canva exactly.
 
 ## Design language
 

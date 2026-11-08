@@ -1,0 +1,216 @@
+/* ==========================================================================
+   Canva pages (index.html, travel.html) — pixel-exact reproductions of
+   assets/Design_Language/FINAL/{1,2}.png.
+
+   Each band is the design's flat background color at the design's exact
+   aspect ratio; every element is a transparent layer cut from the export
+   (assets/images/canva/final/, made by FINAL/slice.py) and placed at its
+   original coordinates in % of the 1366px Canva canvas. At rest the page is
+   identical to the export; animations only run on the way in.
+   ========================================================================== */
+
+@font-face {
+  font-family: 'Cormorant Garamond';
+  src: url('../assets/fonts/cormorant-garamond-var.woff2') format('woff2');
+  font-weight: 300 700; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Parisienne';
+  src: url('../assets/fonts/parisienne-400.woff2') format('woff2');
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { overflow-x: clip; -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: #faf5eb;
+  overflow-x: clip;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+}
+
+/* Legacy names consumed by js/gate.js's injected styles */
+:root {
+  --color-bg: #faf5eb;
+  --color-surface: #fffdf9;
+  --color-text: #33402c;
+  --color-text-soft: #5f6a55;
+  --color-border: rgba(74, 106, 48, 0.28);
+  --copper: #648a43;
+  --copper-deep: #4a6a30;
+  --golden-hour: #efb23e;
+  --blush: #f7e1e4;
+  --font-script: 'Parisienne', cursive;
+  --font-body: 'Cormorant Garamond', Georgia, serif;
+}
+
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* ---------- Bands & layers ---------- */
+main { display: block; container-type: inline-size; }
+.cv-band {
+  position: relative;
+  width: 100%;
+  height: calc(var(--h) * 100cqw / 1366); /* whole pixels at native width */
+  container-type: inline-size;
+  background: var(--bg);
+  overflow: hidden;
+}
+.cv-layer {
+  position: absolute;
+  display: block;
+  max-width: none;
+  height: auto;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.cv-link {
+  position: absolute;
+  display: block;
+  border-radius: 4px;
+}
+.cv-link:focus-visible { outline: 2px solid #1f7c97; outline-offset: 2px; }
+
+/* ---------- Floating menu (keeps the design itself untouched) ---------- */
+.cv-menu {
+  position: fixed;
+  top: clamp(0.6rem, 1.6vw, 1.25rem);
+  right: clamp(0.6rem, 1.6vw, 1.25rem);
+  z-index: 60;
+}
+.cv-menu__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  height: 44px;
+  padding: 0 1.05rem 0 0.95rem;
+  border: 1px solid rgba(51, 64, 44, 0.18);
+  border-radius: 999px;
+  background: rgba(255, 253, 249, 0.82);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #33402c;
+  font: 600 0.95rem/1 'Cormorant Garamond', Georgia, serif;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 8px 24px -14px rgba(51, 64, 44, 0.55);
+  transition: background 0.25s, transform 0.25s;
+}
+.cv-menu__btn:hover { background: #fffdf9; transform: translateY(-1px); }
+.cv-menu__bars, .cv-menu__bars::before, .cv-menu__bars::after {
+  display: block; width: 16px; height: 1.5px; background: currentColor; border-radius: 2px;
+  transition: transform 0.3s, opacity 0.3s;
+}
+.cv-menu__bars { position: relative; }
+.cv-menu__bars::before, .cv-menu__bars::after { content: ''; position: absolute; left: 0; }
+.cv-menu__bars::before { top: -5px; }
+.cv-menu__bars::after { top: 5px; }
+.cv-menu.is-open .cv-menu__bars { background: transparent; }
+.cv-menu.is-open .cv-menu__bars::before { transform: translateY(5px) rotate(45deg); }
+.cv-menu.is-open .cv-menu__bars::after { transform: translateY(-5px) rotate(-45deg); }
+
+.cv-menu__list {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.5rem);
+  min-width: 11rem;
+  margin: 0;
+  padding: 0.5rem;
+  list-style: none;
+  background: rgba(255, 253, 249, 0.96);
+  border: 1px solid rgba(51, 64, 44, 0.14);
+  border-radius: 14px;
+  box-shadow: 0 18px 40px -18px rgba(51, 64, 44, 0.45);
+  opacity: 0;
+  transform: translateY(-6px) scale(0.98);
+  transform-origin: top right;
+  pointer-events: none;
+  transition: opacity 0.22s, transform 0.22s;
+}
+.cv-menu.is-open .cv-menu__list { opacity: 1; transform: none; pointer-events: auto; }
+.cv-menu__list a {
+  display: block;
+  padding: 0.6rem 0.9rem;
+  border-radius: 9px;
+  color: #33402c;
+  text-decoration: none;
+  font: 600 1.15rem/1.2 'Cormorant Garamond', Georgia, serif;
+  letter-spacing: 0.04em;
+}
+.cv-menu__list a:hover { background: #f4ecdf; }
+.cv-menu__list a[aria-current="page"] { color: #4a6a30; background: #eef3e4; }
+
+/* ==========================================================================
+   Entrance animations — only when JS is running (html.cv-js) and motion is
+   allowed. js/canva.js adds .is-in to a band when it scrolls into view.
+   Every animation ends at the layer's exact resting state.
+   ========================================================================== */
+@media (prefers-reduced-motion: no-preference) {
+  .cv-js .cv-band:not(.is-in) [data-anim] { opacity: 0; }
+  .cv-js .cv-band.is-in [data-anim] {
+    animation-duration: 1.2s;
+    animation-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
+    animation-fill-mode: backwards; /* release styles after the run so layers render un-composited, pixel-exact */
+    animation-delay: calc(var(--d, 0) * 1s);
+  }
+
+  /* handwriting: wipe in left → right */
+  .cv-band.is-in [data-anim="write"] { animation-name: cv-write; animation-duration: 1.9s; animation-timing-function: cubic-bezier(0.45, 0.05, 0.4, 1); }
+  @keyframes cv-write {
+    from { clip-path: inset(-10% 100% -10% -2%); opacity: 1; }
+    to { clip-path: inset(-10% -2% -10% -2%); opacity: 1; }
+  }
+
+  /* text & small art: rise and fade */
+  .cv-band.is-in [data-anim="rise"] { animation-name: cv-rise; }
+  @keyframes cv-rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+
+  /* stems: grow up from the base */
+  .cv-band.is-in [data-anim="grow"] { animation-name: cv-grow; animation-duration: 1.7s; transform-origin: 50% 100%; }
+  @keyframes cv-grow {
+    from { opacity: 0; transform: translateY(6%) scaleY(0.82); clip-path: inset(100% -5% 0 -5%); }
+    40% { opacity: 1; }
+    to { opacity: 1; transform: none; clip-path: inset(-5% -5% 0 -5%); }
+  }
+
+  /* bleeding heart: arch swings down from its stem */
+  .cv-band.is-in [data-anim="swing"] { animation-name: cv-swing; animation-duration: 1.8s; transform-origin: 8% 96%; }
+  @keyframes cv-swing { from { opacity: 0; transform: rotate(-14deg); } 50% { opacity: 1; } to { opacity: 1; transform: none; } }
+
+  /* cake: soft fade + settle */
+  .cv-band.is-in [data-anim="settle"] { animation-name: cv-settle; animation-duration: 1.6s; transform-origin: 50% 100%; }
+  @keyframes cv-settle { from { opacity: 0; transform: translateY(14px) scale(0.97); } to { opacity: 1; transform: none; } }
+
+  /* photos & label boxes: wipe reveal */
+  .cv-band.is-in [data-anim="wipe"] { animation-name: cv-wipe; animation-duration: 1.4s; }
+  @keyframes cv-wipe { from { clip-path: inset(0 100% 0 0); opacity: 1; } to { clip-path: inset(0 0 0 0); opacity: 1; } }
+  .cv-band.is-in [data-anim="wipe-up"] { animation-name: cv-wipe-up; animation-duration: 1.6s; }
+  @keyframes cv-wipe-up { from { clip-path: inset(100% 0 0 0); opacity: 1; } to { clip-path: inset(0 0 0 0); opacity: 1; } }
+
+  /* airplane: flies in along its dashed trail */
+  .cv-band.is-in [data-anim="fly"] { animation-name: cv-fly; animation-duration: 2.2s; }
+  @keyframes cv-fly {
+    from { opacity: 0; clip-path: inset(0 100% 0 0); transform: translate(-6%, 8%); }
+    30% { opacity: 1; }
+    to { opacity: 1; clip-path: inset(-5% -5% -5% -5%); transform: none; }
+  }
+
+  /* gentle, continuous sway for flowers once they've arrived */
+  [data-sway] { transform-origin: 50% 100%; }
+  .cv-band.is-in [data-sway] {
+    animation-name: var(--enter, cv-rise), cv-sway;
+    animation-duration: 1.7s, 6s;
+    animation-delay: calc(var(--d, 0) * 1s), calc(var(--d, 0) * 1s + 1.7s);
+    animation-iteration-count: 1, infinite;
+    animation-direction: normal, alternate;
+    animation-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1), ease-in-out;
+  }
+  .cv-band.is-in [data-sway][data-anim="grow"] { --enter: cv-grow; }
+  .cv-band.is-in [data-sway][data-anim="swing"] { --enter: cv-swing; transform-origin: 8% 96%; }
+  @keyframes cv-sway { from { rotate: -0.9deg; } to { rotate: 0.9deg; } }
+}

@@ -1,0 +1,321 @@
+{
+ "landing": {
+  "width": 1366,
+  "height": 3840,
+  "bands": [
+   {
+    "name": "hero",
+    "top": 0,
+    "height": 768,
+    "bg": "#ade1fa",
+    "layers": [
+     {
+      "name": "names",
+      "file": "landing-names.webp",
+      "x": 116,
+      "y": 150,
+      "w": 577,
+      "h": 248,
+      "kind": "art"
+     },
+     {
+      "name": "details",
+      "file": "landing-details.webp",
+      "x": 224,
+      "y": 472,
+      "w": 458,
+      "h": 150,
+      "kind": "art"
+     },
+     {
+      "name": "forgetmenot",
+      "file": "landing-forgetmenot.webp",
+      "x": 86,
+      "y": 471,
+      "w": 130,
+      "h": 222,
+      "kind": "art"
+     },
+     {
+      "name": "cake",
+      "file": "landing-cake.webp",
+      "x": 748,
+      "y": 97,
+      "w": 359,
+      "h": 594,
+      "kind": "art"
+     },
+     {
+      "name": "delphinium",
+      "file": "landing-delphinium.webp",
+      "x": 1107,
+      "y": 193,
+      "w": 158,
+      "h": 520,
+      "kind": "art"
+     }
+    ]
+   },
+   {
+    "name": "std",
+    "top": 768,
+    "height": 768,
+    "bg": "#ffdd86",
+    "layers": [
+     {
+      "name": "photo-couple",
+      "file": "landing-photo-couple.webp",
+      "x": 0,
+      "y": 0,
+      "w": 683,
+      "h": 768,
+      "kind": "photo"
+     },
+     {
+      "name": "std-title",
+      "file": "landing-std-title.webp",
+      "x": 736,
+      "y": 82,
+      "w": 489,
+      "h": 254,
+      "kind": "art"
+     },
+     {
+      "name": "foxglove-tall",
+      "file": "landing-foxglove-tall.webp",
+      "x": 1100,
+      "y": 114,
+      "w": 195,
+      "h": 632,
+      "kind": "art"
+     },
+     {
+      "name": "foxglove-short",
+      "file": "landing-foxglove-short.webp",
+      "x": 954,
+      "y": 342,
+      "w": 146,
+      "h": 403,
+      "kind": "art"
+     }
+    ]
+   },
+   {
+    "name": "join",
+    "top": 1536,
+    "height": 768,
+    "bg": "#cddd78",
+    "layers": [
+     {
+      "name": "join-script",
+      "file": "landing-join-script.webp",
+      "x": 278,
+      "y": 294,
+      "w": 854,
+      "h": 120,
+      "kind": "art"
+     },
+     {
+      "name": "join-text",
+      "file": "landing-join-text.webp",
+      "x": 360,
+      "y": 440,
+      "w": 647,
+      "h": 155,
+      "kind": "art"
+     },
+     {
+      "name": "bleeding-heart",
+      "file": "landing-bleeding-heart.webp",
+      "x": 14,
+      "y": 102,
+      "w": 463,
+      "h": 344,
+      "kind": "art"
+     }
+    ]
+   },
+   {
+    "name": "proposal",
+    "top": 2304,
+    "height": 768,
+    "bg": "#dbe4ed",
+    "layers": [
+     {
+      "name": "photo-proposal",
+      "file": "landing-photo-proposal.webp",
+      "x": 0,
+      "y": 0,
+      "w": 1366,
+      "h": 768,
+      "kind": "photo"
+     }
+    ]
+   },
+   {
+    "name": "contact-banner",
+    "top": 3072,
+    "height": 225,
+    "bg": "#ffa8ac",
+    "layers": [
+     {
+      "name": "contact-banner-text",
+      "file": "landing-contact-banner-text.webp",
+      "x": 89,
+      "y": 89,
+      "w": 766,
+      "h": 39,
+      "kind": "art"
+     }
+    ]
+   },
+   {
+    "name": "contact",
+    "top": 3297,
+    "height": 543,
+    "bg": "#faf5eb",
+    "layers": [
+     {
+      "name": "jolan-label",
+      "file": "landing-jolan-label.webp",
+      "x": 76,
+      "y": 56,
+      "w": 454,
+      "h": 113,
+      "kind": "art"
+     },
+     {
+      "name": "parker-label",
+      "file": "landing-parker-label.webp",
+      "x": 857,
+      "y": 68,
+      "w": 452,
+      "h": 89,
+      "kind": "art"
+     },
+     {
+      "name": "lily",
+      "file": "landing-lily.webp",
+      "x": 569,
+      "y": 137,
+      "w": 209,
+      "h": 357,
+      "kind": "art"
+     },
+     {
+      "name": "jolan-info",
+      "file": "landing-jolan-info.webp",
+      "x": 90,
+      "y": 212,
+      "w": 334,
+      "h": 190,
+      "kind": "art"
+     },
+     {
+      "name": "parker-info",
+      "file": "landing-parker-info.webp",
+      "x": 883,
+      "y": 212,
+      "w": 292,
+      "h": 190,
+      "kind": "art"
+     }
+    ]
+   }
+  ]
+ },
+ "travel": {
+  "width": 1366,
+  "height": 1536,
+  "bands": [
+   {
+    "name": "airports",
+    "top": 0,
+    "height": 768,
+    "bg": "#ffdd86",
+    "layers": [
+     {
+      "name": "travel-title",
+      "file": "travel-travel-title.webp",
+      "x": 265,
+      "y": 88,
+      "w": 828,
+      "h": 152,
+      "kind": "art"
+     },
+     {
+      "name": "airports-title",
+      "file": "travel-airports-title.webp",
+      "x": 85,
+      "y": 264,
+      "w": 555,
+      "h": 97,
+      "kind": "art"
+     },
+     {
+      "name": "airports-list",
+      "file": "travel-airports-list.webp",
+      "x": 77,
+      "y": 382,
+      "w": 749,
+      "h": 164,
+      "kind": "art"
+     },
+     {
+      "name": "plane",
+      "file": "travel-plane.webp",
+      "x": 775,
+      "y": 396,
+      "w": 385,
+      "h": 321,
+      "kind": "art"
+     }
+    ]
+   },
+   {
+    "name": "stay",
+    "top": 768,
+    "height": 768,
+    "bg": "#ade1fa",
+    "layers": [
+     {
+      "name": "stay-title",
+      "file": "travel-stay-title.webp",
+      "x": 830,
+      "y": 64,
+      "w": 461,
+      "h": 111,
+      "kind": "art"
+     },
+     {
+      "name": "stay-text",
+      "file": "travel-stay-text.webp",
+      "x": 152,
+      "y": 191,
+      "w": 1144,
+      "h": 121,
+      "kind": "art"
+     },
+     {
+      "name": "lake",
+      "file": "travel-lake.webp",
+      "x": 35,
+      "y": 340,
+      "w": 571,
+      "h": 397,
+      "kind": "art"
+     },
+     {
+      "name": "stay-list",
+      "file": "travel-stay-list.webp",
+      "x": 704,
+      "y": 364,
+      "w": 556,
+      "h": 160,
+      "kind": "art"
+     }
+    ]
+   }
+  ]
+ }
+}
