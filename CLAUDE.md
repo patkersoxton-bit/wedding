@@ -261,6 +261,12 @@ The admin dashboard now uses `css/site.css` + `css/admin.css`, so
 
 ## Working conventions
 
+- **Cache-busting**: GitHub Pages serves CSS/JS with `max-age=600`, so every
+  `<link>`/`<script>` to `css/` or `js/` carries `?v=<content hash>`.
+  `build_pages.py` does this automatically for the Canva pages; on the
+  hand-written pages, update the `?v=` when you change the file (otherwise
+  visitors can get new HTML with a stale stylesheet for ~10 minutes).
+
 - Keep the site static and dependency-free unless a real requirement forces
   otherwise (e.g. don't add a bundler or framework "just in case"). The RSVP
   system is the one deliberate exception (Supabase) — don't add further
