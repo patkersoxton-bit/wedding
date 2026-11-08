@@ -3,71 +3,70 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Travel | Parker &amp; Jolan</title>
-  <meta name="description" content="Travel information for Parker &amp; Jolan's wedding — closest airports and where to stay near Lake Glenville, NC.">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8C%B8%3C/text%3E%3C/svg%3E">
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-
-  <link rel="stylesheet" href="css/style.css">
+  <title>Travel | Jolan &amp; Parker</title>
+  <meta name="description" content="Travel information for Jolan &amp; Parker's wedding — closest airports and where to stay near Lake Glenville, NC.">
+  <link rel="icon" type="image/png" href="assets/images/design/favicon.png">
+  <link rel="preload" href="assets/fonts/parisienne-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/cinzel-decorative-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/site.css">
+  <script src="js/site-config.js"></script>
   <script src="js/gate.js"></script>
 </head>
 <body>
 
-  <nav class="site-nav">
+  <nav class="site-nav" aria-label="Main">
     <div class="container">
-      <a href="index.html" class="site-nav__logo">P &amp; J</a>
+      <a href="index.html" class="site-nav__logo" aria-label="Home"><img src="assets/images/design/monogram-wreath.webp" alt=""></a>
       <button class="site-nav__toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="site-nav-links">&#9776;</button>
       <ul class="site-nav__links" id="site-nav-links">
+        <li><a href="index.html">Home</a></li>
         <li><a href="venue.html">Venue</a></li>
-        <li><a href="travel.html">Travel</a></li>
+        <li><a href="travel.html" aria-current="page">Travel</a></li>
         <li><a href="rsvp.html">RSVP</a></li>
       </ul>
     </div>
   </nav>
 
-  <section class="travel-block travel-block--amber" style="padding-top: calc(4rem + var(--space-xl));">
+  <header class="page-head">
     <div class="container">
-      <div class="travel-block__text">
-        <h2 class="reveal">travel information</h2>
-        <h3 class="reveal reveal--d1">closest airports</h3>
-        <p class="reveal reveal--d1"><strong>There are multiple options for flying in</strong></p>
-        <ul class="reveal reveal--d2">
-          <li>Asheville (AVL) &mdash; 1 hour 20 minutes from venue</li>
-          <li>Charlotte (CLT) &mdash; 3 hours from venue</li>
-          <li>Atlanta (ATL) &mdash; 3 hours from venue</li>
+      <span class="eyebrow reveal">getting here</span>
+      <h1 class="page-head__title reveal reveal--d1">Travel</h1>
+      <p class="page-head__sub reveal reveal--d2">Glenville &middot; Cashiers &middot; Highlands &middot; Sapphire</p>
+      <div class="flourish reveal reveal--d2" aria-hidden="true"><img src="assets/images/design/florals/leaf-sprig.webp" alt=""></div>
+    </div>
+  </header>
+
+  <section class="section section--tight" style="padding-top: 0;">
+    <div class="container travel-grid">
+      <div class="info-card reveal">
+        <h2>Flying In</h2>
+        <p>There are a few good options for flying in:</p>
+        <ul>
+          <li>Asheville (AVL) <span class="detail">&mdash; about 1 hr 20 min from the venue</span></li>
+          <li>Charlotte (CLT) <span class="detail">&mdash; about 3 hrs from the venue</span></li>
+          <li>Atlanta (ATL) <span class="detail">&mdash; about 3 hrs from the venue</span></li>
         </ul>
       </div>
-      <div class="travel-block__art">
-        <img class="reveal reveal--d2" src="assets/images/canva/elements/airplane.png" alt="Line-drawn airplane with a dashed flight trail">
+
+      <div class="info-card reveal reveal--d1">
+        <h2>Where to Stay</h2>
+        <p>The venue is in Glenville, NC. Nearby towns include Cashiers, Highlands, and Sapphire, with plenty of hotels and short-term rentals in the area.</p>
+        <ul>
+          <li class="placeholder">[Hotel / rental suggestion]</li>
+          <li class="placeholder">[Hotel / rental suggestion]</li>
+          <li class="placeholder">[Hotel / rental suggestion]</li>
+        </ul>
       </div>
     </div>
-  </section>
 
-  <section class="travel-block travel-block--blue travel-block--reverse">
-    <div class="container">
-      <div class="travel-block__art">
-        <img class="reveal" src="assets/images/canva/elements/mountain-skyline.png" alt="Line-drawn mountain, pine tree, and lake skyline">
-      </div>
-      <div class="travel-block__text">
-        <h2 class="reveal reveal--d1">Where to stay</h2>
-        <p class="reveal reveal--d2"><strong>The venue is located in Glenville, NC.</strong><br>
-        Other nearby towns include Cashiers, Highlands, and Sapphire. There are
-        many hotels and short-term rentals like Airbnbs in the area.</p>
-        <ul class="reveal reveal--d3">
-          <li><em>[Add hotel/rental suggestions here]</em></li>
-          <li><em>[Add hotel/rental suggestions here]</em></li>
-          <li><em>[Add hotel/rental suggestions here]</em></li>
-        </ul>
-      </div>
+    <div class="container" style="margin-top: var(--space-xl);">
+      <img class="basket-art reveal" src="assets/images/design/basket.webp" alt="" loading="lazy" style="width: min(380px, 70%);">
     </div>
   </section>
 
   <footer class="site-footer">
-    <div class="site-footer__names">Parker &amp; Jolan</div>
-    <p>May 27, 2028 &middot; parkerandjolan.com</p>
+    <div class="site-footer__names">Jolan &amp; Parker</div>
+    <p>May 27, 2028 &middot; Glenville, NC</p>
   </footer>
 
   <script src="js/main.js"></script>

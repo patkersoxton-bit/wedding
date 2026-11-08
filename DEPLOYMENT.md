@@ -46,10 +46,11 @@ not work for the public until that's swapped to a hosted Supabase project.
 
 - all root `*.html` pages
 - `css/`, `js/`
-- `assets/images/photos/`
+- `assets/images/design/`, `assets/images/canva/`, `assets/fonts/` (WOFF2 + licenses)
 
 **Never deploy** (excluded by the workflow — keep it that way):
 
+- `assets/Design_Language/` (multi-MB source art + font zips)
 - `assets/images/inspiration/` — Pinterest reference images; publishing
   them on the site violates the project's image-sourcing rule. Note: the
   repo itself is public, so these are visible on github.com regardless —

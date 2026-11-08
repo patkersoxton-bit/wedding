@@ -3,76 +3,69 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Venue | Parker &amp; Jolan</title>
-  <meta name="description" content="Venue and property map for Parker &amp; Jolan's wedding at Chimney Pond Farm &amp; Lodge, Lake Glenville, NC.">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8C%B8%3C/text%3E%3C/svg%3E">
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-
-  <link rel="stylesheet" href="css/style.css">
+  <title>Venue | Jolan &amp; Parker</title>
+  <meta name="description" content="Chimney Pond Farm in Glenville, North Carolina — the venue for Jolan &amp; Parker's wedding.">
+  <link rel="icon" type="image/png" href="assets/images/design/favicon.png">
+  <link rel="preload" href="assets/fonts/parisienne-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/cinzel-decorative-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/site.css">
+  <script src="js/site-config.js"></script>
   <script src="js/gate.js"></script>
 </head>
 <body>
 
-  <nav class="site-nav">
+  <nav class="site-nav" aria-label="Main">
     <div class="container">
-      <a href="index.html" class="site-nav__logo">P &amp; J</a>
-      <button class="site-nav__toggle" aria-label="Toggle navigation">&#9776;</button>
-      <ul class="site-nav__links">
-        <li><a href="venue.html">Venue</a></li>
+      <a href="index.html" class="site-nav__logo" aria-label="Home"><img src="assets/images/design/monogram-wreath.webp" alt=""></a>
+      <button class="site-nav__toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="site-nav-links">&#9776;</button>
+      <ul class="site-nav__links" id="site-nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="venue.html" aria-current="page">Venue</a></li>
         <li><a href="travel.html">Travel</a></li>
         <li><a href="rsvp.html">RSVP</a></li>
       </ul>
     </div>
   </nav>
 
-  <section class="rsvp-page">
+  <header class="page-head">
     <div class="container">
-      <div class="section-heading reveal">
-        <span class="section-heading__eyebrow">Where to find us</span>
-        <div class="floral-divider" aria-hidden="true">
-          <svg viewBox="0 0 140 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M70 16 C55 4 40 4 22 16" stroke="var(--moss)" stroke-width="2" stroke-linecap="round"/>
-            <path d="M70 16 C85 4 100 4 118 16" stroke="var(--moss)" stroke-width="2" stroke-linecap="round"/>
-            <g transform="translate(22,15)">
-              <circle cx="-4" cy="-3" r="5" fill="var(--copper)"/>
-              <circle cx="4" cy="-3" r="5" fill="var(--apricot)"/>
-              <circle cx="0" cy="4" r="5" fill="var(--golden-hour)"/>
-              <circle cx="0" cy="0" r="2.4" fill="var(--blush)"/>
-            </g>
-            <g transform="translate(118,15)">
-              <circle cx="-4" cy="-3" r="5" fill="var(--apricot)"/>
-              <circle cx="4" cy="-3" r="5" fill="var(--copper)"/>
-              <circle cx="0" cy="4" r="5" fill="var(--golden-hour)"/>
-              <circle cx="0" cy="0" r="2.4" fill="var(--blush)"/>
-            </g>
-            <g transform="translate(70,9)">
-              <circle cx="-3.4" cy="-2" r="4" fill="var(--misty-blue)"/>
-              <circle cx="3.4" cy="-2" r="4" fill="var(--misty-blue)"/>
-              <circle cx="0" cy="3.4" r="4" fill="var(--copper)"/>
-              <circle cx="0" cy="0" r="2" fill="var(--golden-hour)"/>
-            </g>
-          </svg>
+      <span class="eyebrow reveal">where we&rsquo;ll celebrate</span>
+      <h1 class="page-head__title reveal reveal--d1">The Venue</h1>
+      <p class="page-head__sub reveal reveal--d2">Chimney Pond Farm &middot; Glenville, North Carolina</p>
+      <div class="flourish reveal reveal--d2" aria-hidden="true"><img src="assets/images/design/florals/leaf-sprig.webp" alt=""></div>
+    </div>
+  </header>
+
+  <section class="section section--tight" style="padding-top: 0;">
+    <div class="container venue-grid">
+      <figure class="map-frame reveal" style="margin: 0;">
+        <img src="assets/images/design/venue-map.webp" width="1400" height="1757" alt="Illustrated map of Chimney Pond Farm showing the ceremony site, overlook porch, reception venue and hall, parking lot, guest cabins and houses, Chimney Pond, and Lake Glenville">
+        <figcaption>A painted map of the farm &mdash; the ceremony site sits at the center, with the reception hall just below.</figcaption>
+      </figure>
+
+      <div>
+        <div class="info-card reveal reveal--d1">
+          <h2>Chimney Pond Farm</h2>
+          <p>Tucked in the Blue Ridge Mountains above Lake Glenville, the farm will host our ceremony and reception on Saturday, May 27, 2028.</p>
+          <p class="placeholder">[Full street address to come.]</p>
         </div>
-        <h2>Venue</h2>
-        <p>Chimney Pond Farm &amp; Lodge &middot; Lake Glenville, NC</p>
-      </div>
-
-      <div class="venue-map-wrap reveal">
-        <img class="venue-map" src="assets/images/photos/MAPBLUE.jpg" alt="Property map of Chimney Pond Farm &amp; Lodge in Lake Glenville, NC, showing the ceremony site, reception venue, guest cabins, parking, and the lake house dock">
-      </div>
-
-      <div class="rsvp-card venue-note reveal">
-        <p>[Full street address, driving directions, and parking notes to come.]</p>
+        <div class="info-card reveal reveal--d2">
+          <h2>On the Day</h2>
+          <ul>
+            <li>Ceremony Site <span class="detail">&mdash; on the hill below the Overlook Porch</span></li>
+            <li>Reception Venue &amp; Hall <span class="detail">&mdash; just off the main parking lot</span></li>
+            <li class="placeholder">[Driving directions and parking notes to come.]</li>
+          </ul>
+        </div>
+        <img class="reveal reveal--d3 sway" src="assets/images/design/florals/orchid.webp" alt="" style="width: 52%; margin: var(--space-md) 0 0 auto;" loading="lazy">
       </div>
     </div>
   </section>
 
   <footer class="site-footer">
-    <div class="site-footer__names">Parker &amp; Jolan</div>
-    <p>May 27, 2028 &middot; parkerandjolan.com</p>
+    <img class="site-footer__art" src="assets/images/design/basket-wide.webp" alt="" loading="lazy">
+    <div class="site-footer__names">Jolan &amp; Parker</div>
+    <p>May 27, 2028 &middot; Glenville, NC</p>
   </footer>
 
   <script src="js/main.js"></script>

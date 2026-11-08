@@ -3,24 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Parker & Jolan | May 27, 2028</title>
-  <meta name="description" content="Join us as we celebrate our wedding — Parker & Jolan.">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8C%B8%3C/text%3E%3C/svg%3E">
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-
-  <link rel="stylesheet" href="css/style.css">
+  <title>Jolan &amp; Parker | May 27, 2028</title>
+  <meta name="description" content="Save the date — Jolan &amp; Parker are getting married May 27, 2028 at Chimney Pond Farm in Glenville, North Carolina.">
+  <link rel="icon" type="image/png" href="assets/images/design/favicon.png">
+  <link rel="preload" href="assets/fonts/parisienne-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/cinzel-decorative-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/site.css">
+  <script src="js/site-config.js"></script>
   <script src="js/gate.js"></script>
 </head>
 <body>
 
-  <nav class="site-nav">
+  <nav class="site-nav" aria-label="Main">
     <div class="container">
-      <a href="#" class="site-nav__logo">P &amp; J</a>
+      <a href="index.html" class="site-nav__logo" aria-label="Home"><img src="assets/images/design/monogram-wreath.webp" alt=""></a>
       <button class="site-nav__toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="site-nav-links">&#9776;</button>
       <ul class="site-nav__links" id="site-nav-links">
+        <li><a href="index.html" aria-current="page">Home</a></li>
         <li><a href="venue.html">Venue</a></li>
         <li><a href="travel.html">Travel</a></li>
         <li><a href="rsvp.html">RSVP</a></li>
@@ -29,93 +28,107 @@
   </nav>
 
   <header class="hero">
-    <div class="container">
-      <div class="hero__content">
-        <h1 class="hero__names reveal">Jolan and Parker</h1>
-        <p class="hero__date reveal reveal--d1">Saturday May 27<sup>th</sup>, 2028<br>Chimmney pond farm<br>Glenville, NC</p>
-        <img class="hero__forgetmenot reveal reveal--d2" src="assets/images/canva/elements/hero-forgetmenot.png" alt="">
+    <img class="hero__flower hero__flower--left grow" src="assets/images/design/florals/foxglove.webp" alt="">
+    <img class="hero__flower hero__flower--fern-left grow grow--d1" src="assets/images/design/florals/fern.webp" alt="">
+    <img class="hero__flower hero__flower--right grow grow--d1" src="assets/images/design/florals/delphinium.webp" alt="">
+    <img class="hero__flower hero__flower--fern-right grow grow--d2" src="assets/images/design/florals/fern-tall.webp" alt="">
 
-        <div class="countdown reveal reveal--d2" data-wedding-date="2028-05-27T16:00:00">
-          <div class="countdown__item">
-            <span class="countdown__num" data-days>0</span>
-            <span class="countdown__label">Days</span>
-          </div>
-          <div class="countdown__item">
-            <span class="countdown__num" data-hours>00</span>
-            <span class="countdown__label">Hours</span>
-          </div>
-          <div class="countdown__item">
-            <span class="countdown__num" data-minutes>00</span>
-            <span class="countdown__label">Mins</span>
-          </div>
-          <div class="countdown__item">
-            <span class="countdown__num" data-seconds>00</span>
-            <span class="countdown__label">Secs</span>
-          </div>
-        </div>
+    <div class="container hero__content">
+      <img class="hero__monogram reveal" src="assets/images/design/monogram-wreath.webp" alt="J P monogram in a wreath of bleeding hearts">
+      <span class="eyebrow reveal reveal--d1">save the date</span>
+      <h1 class="hero__names reveal reveal--d1">Jolan <span class="amp">&amp;</span> Parker</h1>
+      <p class="hero__date reveal reveal--d2">May 27 &middot; 2028</p>
+      <p class="hero__place reveal reveal--d2">Chimney Pond Farm &middot; Glenville, North Carolina</p>
+
+      <div class="countdown reveal reveal--d3" data-wedding-date="2028-05-27T16:00:00" aria-label="Countdown to the wedding">
+        <div class="countdown__item"><span class="countdown__num" data-days>0</span><span class="countdown__label">Days</span></div>
+        <div class="countdown__item"><span class="countdown__num" data-hours>00</span><span class="countdown__label">Hours</span></div>
+        <div class="countdown__item"><span class="countdown__num" data-minutes>00</span><span class="countdown__label">Mins</span></div>
+        <div class="countdown__item"><span class="countdown__num" data-seconds>00</span><span class="countdown__label">Secs</span></div>
       </div>
 
-      <div class="hero__art">
-        <img class="hero__cake reveal reveal--d3" src="assets/images/canva/elements/hero-cake-flower.png" alt="Line-drawn wedding cake illustration beside a watercolor delphinium spray">
-      </div>
+      <p class="hero__note reveal reveal--d3">formal invitation to follow</p>
     </div>
   </header>
 
-  <section class="story">
-    <div class="story__grid">
-      <div class="story__photo-wrap reveal">
-        <div class="story__photo">
-          <img src="assets/images/canva/elements/split-photo.png" alt="Parker and Jolan embracing, foreheads together, by the lake">
-        </div>
+  <section class="section section--band">
+    <div class="container std">
+      <div class="std__photo reveal">
+        <img class="photo" src="assets/images/canva/elements/split-photo.png" alt="Parker and Jolan embracing, foreheads together, by the lake">
+        <img class="std__fern sway" src="assets/images/design/florals/fern-small.webp" alt="">
+        <img class="std__rose" src="assets/images/design/florals/rose.webp" alt="">
       </div>
-      <div class="story__text">
-        <h2 class="reveal reveal--d1">Save the Date!</h2>
-        <img class="story__accent reveal reveal--d2" src="assets/images/canva/elements/save-the-date-flowers.png" alt="Watercolor snapdragon and foxglove flowers">
+      <div class="std__text">
+        <span class="eyebrow reveal">we&rsquo;re getting married!</span>
+        <h2 class="script reveal reveal--d1">Save the Date</h2>
+        <p class="formal reveal reveal--d2">Saturday, May twenty-seventh<br>two thousand twenty-eight</p>
+        <div class="flourish reveal reveal--d2" aria-hidden="true"><img src="assets/images/design/florals/leaf-sprig.webp" alt=""></div>
+        <p class="lead reveal reveal--d3">We would love for you to celebrate with us in the mountains of western North Carolina. Mark your calendar &mdash; a formal invitation with all the details will follow.</p>
       </div>
     </div>
   </section>
 
-  <section class="welcome-band">
+  <section class="section">
     <div class="container">
-      <div class="welcome-band__inner">
-        <img class="welcome-band__art reveal" src="assets/images/canva/elements/bleeding-heart.png" alt="Watercolor bleeding-heart flower sprig">
-        <h2 class="reveal reveal--d1">we hope you can join us!</h2>
-        <p class="reveal reveal--d2">In addition to the wedding ceremony and reception on Saturday, a welcome event will be hosted Friday evening, and farewell coffee and pastries will be available Sunday morning.</p>
+      <div class="section-head">
+        <span class="eyebrow reveal">we hope you can join us</span>
+        <h2 class="section-title reveal reveal--d1">The Weekend</h2>
+        <div class="flourish reveal reveal--d1" aria-hidden="true"><img src="assets/images/design/florals/leaf-sprig.webp" alt=""></div>
+      </div>
+      <div class="weekend">
+        <article class="weekend__card reveal">
+          <img src="assets/images/design/doodle-toast.webp" alt="">
+          <p class="weekend__day">Friday</p>
+          <h3>Welcome Evening</h3>
+          <p>Kick off the weekend with us at a welcome event Friday evening.</p>
+        </article>
+        <article class="weekend__card reveal reveal--d1">
+          <img src="assets/images/design/doodle-rings.webp" alt="">
+          <p class="weekend__day">Saturday &middot; May 27</p>
+          <h3>The Wedding</h3>
+          <p>Ceremony and reception at Chimney Pond Farm.</p>
+        </article>
+        <article class="weekend__card reveal reveal--d2">
+          <img src="assets/images/design/doodle-coffee.webp" alt="">
+          <p class="weekend__day">Sunday</p>
+          <h3>Farewell Coffee</h3>
+          <p>Coffee and pastries Sunday morning before you head home.</p>
+        </article>
       </div>
     </div>
   </section>
 
   <section class="full-photo reveal">
-    <img src="assets/images/canva/elements/big-photo.png" alt="Parker proposing to Jolan on the shore of Lake McDonald at sunset">
+    <img src="assets/images/canva/elements/big-photo.png" alt="Parker proposing to Jolan on the shore of Lake McDonald at sunset" loading="lazy">
   </section>
 
-  <section class="contact-banner">
+  <section class="section">
     <div class="container">
-      <p class="reveal">For any questions, please contact us at:</p>
-    </div>
-  </section>
-
-  <section class="contact-info">
-    <div class="container">
-      <div class="contact-info__grid">
-        <div class="contact-info__person reveal">
-          <span class="contact-info__name">Jolan Motyka</span>
-          <p><strong>Phone</strong><br>(919) 491-8996</p>
-          <p><strong>Email</strong><br>jolan.motyka@richmond.edu</p>
+      <div class="section-head">
+        <span class="eyebrow reveal">questions?</span>
+        <h2 class="section-title reveal reveal--d1">Get in Touch</h2>
+        <div class="flourish reveal reveal--d1" aria-hidden="true"><img src="assets/images/design/florals/leaf-sprig.webp" alt=""></div>
+      </div>
+      <div class="contact">
+        <div class="contact__person reveal">
+          <span class="contact__name">Jolan Motyka</span>
+          <p><span class="contact__label">Phone</span><a href="tel:+19194918996">(919) 491-8996</a></p>
+          <p><span class="contact__label">Email</span><a href="mailto:jolan.motyka@richmond.edu">jolan.motyka@richmond.edu</a></p>
         </div>
-        <img class="contact-info__art reveal reveal--d1" src="assets/images/canva/elements/lily-of-the-valley.png" alt="Watercolor lily-of-the-valley sprig">
-        <div class="contact-info__person reveal reveal--d2">
-          <span class="contact-info__name">Parker Sexton</span>
-          <p><strong>Phone</strong><br>(919) 704-6108</p>
-          <p><strong>Email</strong><br>parkersexton@gmail.com</p>
+        <img class="contact__art reveal reveal--d1 sway" src="assets/images/design/florals/rhododendron.webp" alt="" loading="lazy">
+        <div class="contact__person reveal reveal--d2">
+          <span class="contact__name">Parker Sexton</span>
+          <p><span class="contact__label">Phone</span><a href="tel:+19197046108">(919) 704-6108</a></p>
+          <p><span class="contact__label">Email</span><a href="mailto:parkersexton@gmail.com">parkersexton@gmail.com</a></p>
         </div>
       </div>
     </div>
   </section>
 
   <footer class="site-footer">
-    <div class="site-footer__names">Parker &amp; Jolan</div>
-    <p>May 27, 2028 &middot; parkerandjolan.com</p>
+    <img class="site-footer__art" src="assets/images/design/basket-wide.webp" alt="" loading="lazy">
+    <div class="site-footer__names">Jolan &amp; Parker</div>
+    <p>May 27, 2028 &middot; Glenville, NC</p>
   </footer>
 
   <script src="js/main.js"></script>

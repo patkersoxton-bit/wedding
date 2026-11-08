@@ -30,27 +30,36 @@ and RSVP data outright instead of handing it to a third party.
   now custom, see "RSVP system" below). The guest database can export a CSV
   formatted for Zola's guest-list import, kept as a fallback/parallel option,
   not a dependency.
-- **Hosting**: Hostinger, static file hosting only (not Hostinger's drag-and-drop
-  website builder). Deployment is uploading built HTML/CSS/JS/assets directly —
-  no server-side rendering, no backend process to keep running on Hostinger
-  itself (Supabase is the only piece of actual backend infrastructure, and it's
-  managed/hosted separately).
-- **Domain**: parkerandjolan.com, pointed at Hostinger.
+- **Hosting**: GitHub Pages, deployed by `.github/workflows/deploy-pages.yml`
+  on every push to `main`. The workflow stages only the public site files
+  (root `*.html`, `css/`, `js/`, `assets/images/design/`,
+  `assets/images/canva/`, `assets/fonts/`) — never `assets/Design_Language/`
+  sources, inspiration images, `supabase/`, or docs. See `DEPLOYMENT.md`.
+  Supabase is the only backend infrastructure, managed/hosted separately.
+- **Domain**: parkerandjolan.com (`CNAME`).
 
 ## Project structure
 
 ```
 /
-├── index.html          # main landing page
-├── rsvp.html            # guest-facing search + RSVP response flow
-├── admin.html           # planner dashboard (auth-gated)
+├── index.html          # Home (save the date, weekend, contact)
+├── venue.html          # Venue (painted farm map)
+├── travel.html         # Travel (airports, lodging)
+├── rsvp.html           # RSVP — phase 1 "coming soon", phase 2 lookup + response
+├── address.html        # pre-invite address collector — standalone, unlinked, noindex
+├── admin.html          # planner dashboard (auth-gated)
 ├── css/
-│   └── style.css       # global styles, theme variables, animations
+│   ├── site.css        # public-page design system: tokens, fonts, components
+│   ├── style.css       # legacy theme, now used only by admin.html
+│   └── admin.css       # admin-only dashboard styles (self-contained)
 ├── js/
-│   ├── main.js          # interactions, scroll effects, Zola embed init if needed
+│   ├── site-config.js   # SITE_PHASE switch (1 = save the date, 2 = RSVP live)
+│   ├── gate.js          # client-side site password gate (deterrent, not security)
+│   ├── main.js          # nav, scroll reveals, countdown
 │   ├── supabase-client.js  # shared Supabase client init (URL + anon key)
 │   ├── escape.js        # escapeHtml() — required for any DB value rendered via innerHTML
-│   ├── rsvp.js          # rsvp.html logic (search, party lookup, submit)
+│   ├── rsvp.js          # rsvp.html logic (exact-name lookup, party, submit)
+│   ├── address.js       # address.html submit
 │   ├── admin.js         # admin.html logic (auth, stats, CRUD, CSV export)
 │   └── charts.js        # hand-rolled SVG pie/meter charts for the dashboard
 ├── backup/              # live mirror + snapshot history on the OptiPlex (see backup/README.md)
@@ -63,15 +72,32 @@ and RSVP data outright instead of handing it to a third party.
 │   ├── migrations/      # schema: tables, RLS policies, RPC functions (0001_init.sql, …)
 │   └── seed.sql         # local prototype seed data
 ├── assets/
+│   ├── Design_Language/  # SOURCE artwork + font zips from Parker (not deployed)
 │   ├── images/
-│   │   └── inspiration/  # reference screenshots/mockups driving the design
-│   └── fonts/           # any self-hosted font files
+│   │   ├── design/       # web-ready derivatives of Design_Language (deployed)
+│   │   │   └── florals/  # individual stems split from 1flowers.png
+│   │   ├── canva/elements/  # Canva export (couple photos used on Home)
+│   │   ├── photos/       # proposal photos (not currently deployed)
+│   │   └── inspiration/  # old Pinterest references (never deployed)
+│   └── fonts/           # self-hosted WOFF2 (Latin subset) + licenses/
 └── CLAUDE.md
 ```
 
-Additional HTML pages (e.g. `story.html`, `travel.html`, `registry.html`) should
-live at the root alongside `index.html` and share `css/style.css` and
-`js/main.js` unless a page needs page-specific logic.
+Phase 1 nav is exactly Home / Venue / Travel / RSVP. New public pages live at
+the root, use `css/site.css` + `js/site-config.js` + `js/gate.js` +
+`js/main.js`, and copy the nav/footer markup from an existing page.
+
+## Site phases
+
+`js/site-config.js` sets `SITE_PHASE` and stamps `<html data-phase="N">`.
+Phase-specific markup uses `.phase-1-only` / `.phase-2-only` (hidden via CSS)
+rather than being deleted, so moving phases is a one-line change.
+- **Phase 1 (current) — save the date**: Home, Venue, Travel, RSVP tabs. RSVP
+  shows "RSVPs open with the formal invitation"; no lookup form.
+- **Phase 2 — invitations out**: set `SITE_PHASE = 2`; RSVP lookup/response
+  goes live. The address collector (`address.html`) is for *pre-invite*
+  gathering, sits outside all phases: no nav, no site gate, `noindex`, only
+  ever shared by direct link.
 
 ## RSVP system
 
@@ -124,74 +150,66 @@ for the anon role; only authenticated admin users get direct table access.
   access to any `authenticated` session, so this is a credentials/UI
   simplification, not a security regression — swap for real per-planner
   accounts (Parker, Jolan, Elizabeth Motyka) before going live.
-- Stats (invited/responded/attending/declined counts, meal breakdown), full
-  CRUD editor for parties/guests, CSV export (see Zola CSV format below).
+- Tabs follow the planning stages: **Overview** (progress per stage +
+  RSVP/meal charts), **Guests** (inline-edit table, quick filters, tick rows
+  → bulk move into a party, Zola + Shutterfly CSV exports — Shutterfly is
+  invited-only, one row per household), **Parties** (rename/notes/members,
+  delete = ungroup, "group unassigned guests by last name" helper),
+  **Phones & Texting** (paste/CSV phone import with match preview; per-guest
+  `sms:` links with the address-page link, "texted" stored in
+  `guests.extra.address_texted_at`), **Address Inbox** (review submissions).
+- Address page submissions (`submit_address_entry`) land in
+  `address_submissions`, never directly in `guests` (migration 0007) — the
+  old direct insert let anyone add themselves as an invited guest. A
+  planner applies each one via `apply_address_submission` (fills the
+  matched guest's address, or creates a new guest; optionally moves them
+  into the submitted household's party). The suggested match is a unique
+  phone match, then a unique exact-name match.
+- `guests.party_id` is `ON DELETE SET NULL`: deleting a party ungroups its
+  members, it doesn't delete them.
+- Some guests are first-name-only (`last_name = ''`, e.g. "Zoe's
+  Boyfriend"); the column is NOT NULL so blank is stored as `''`.
 
-## Design process
+## Design language
 
-1. Inspiration references get dropped into `assets/images/inspiration/` along
-   with notes on which elements (palette, type, layout, motion) to pull from
-   each.
-2. Theme gets distilled into CSS custom properties in `css/style.css` (colors,
-   fonts, spacing scale) so the look stays consistent across pages.
-3. Content (copy, photos, event details, schedule) gets filled in once
-   structure/theme are settled — placeholders until then.
+The site's look comes **only** from Parker's artwork in
+`assets/Design_Language/` (hand-painted watercolor florals, paper-cut
+bouquets, blue line-drawn doodles, the J·P monogram, the painted venue map)
+plus the Canva couple photos. Don't add Claude-drawn SVG flourishes, emoji, or
+other ad hoc art — if a section needs decoration, use a piece from
+`assets/images/design/`. To add new artwork: drop the source in
+`Design_Language/`, then export a trimmed, resized `.webp` into
+`assets/images/design/` (sources there are multi-MB PNGs and aren't
+deployed). `1flowers.png` was split into individual stems in
+`design/florals/` (foxglove, delphinium, rose, rhododendron, orchid, ferns,
+leaf-sprig); more individual flower images are coming.
 
-### Theme: bright floral (boho garden)
-
-Direction pulled from the Pinterest board in `assets/images/inspiration/Theme/`
-— dahlias/wildflowers, hanging floral installations, mixed-color bridesmaid
-palettes — warm and floral rather than muted/minimalist.
-
-Canonical color palette comes from
-`assets/images/inspiration/Theme/Pinterest_files/THEME.png` (supersedes the
-earlier `colors.jpg` "Summer 2025" palette — that file is kept only for
-historical reference, don't pull colors from it anymore), implemented as CSS
-custom properties in `css/style.css`:
-
-| Name | Hex | Role |
+**Fonts** (self-hosted in `assets/fonts/`, from the Design_Language zips):
+| Token | Font | Use |
 |---|---|---|
-| Copper | `#ef5356` | primary accent — headings, script names, primary buttons |
-| Golden Hour | `#f2af3f` | secondary accent — buttons, highlights |
-| Apricot | `#fda170` | soft accent — backgrounds, card borders |
-| Blush | `#f2c1c1` | soft accent — backgrounds, subtle fills |
-| Misty Blue | `#c0cfe0` | secondary accent — links, cool contrast |
-| Moss | `#9f985c` | deep green accent — dividers, icons, floral leaves |
-| Moss Light | `#c5c463` | lighter green accent |
+| `--font-script` | Parisienne | names, page titles, card titles |
+| `--font-display` | Cinzel Decorative | formal small-caps lines, nav, labels, buttons |
+| `--font-serif` | Cormorant Garamond | body copy |
+| `--font-hand` | Homemade Apple | small handwritten eyebrows/notes only |
 
-This palette is warmer/softer than the old neon "Summer 2025" set — background,
-shadow, and text tones were adjusted (color-corrected) to sit comfortably next
-to it rather than clash.
+**Palette** (sampled from the artwork; tokens in `css/site.css`):
+| Token | Hex | Source / role |
+|---|---|---|
+| `--paper` | `#fcf8f1` | page background |
+| `--ink` | `#33402c` | body text |
+| `--moss` | `#648a43` | monogram wreath green — primary |
+| `--moss-deep` | `#4a6a30` | headings, hover |
+| `--delphinium` | `#32a6c4` | doodle blue; `--delphinium-deep` for links |
+| `--rose` | `#d4688c` | rose/rhododendron pink — eyebrows, accents |
+| `--coral` / `--marigold` / `--orchid` | `#ec7a5e` / `#efb23e` / `#a96cb0` | bouquet accents |
 
-Floral accents on the site (section-heading flourishes, the corner bloom
-behind the Our Story photo) are original hand-drawn inline SVGs built from
-this palette — not traced from or copies of the Pinterest photos.
+Recurring motifs: arched-top cards/photos, the `.flourish` leaf-sprig divider,
+painted stems flanking the hero, the wide flower basket above the footer.
 
-Beyond the palette, the site's graphic language comes from two specific
-references in `Theme/Pinterest_files/`:
-`0b0446e046fc81b53ae8267efcd6a753.jpg` (doodle-covered invitation: wavy
-border frame, hatched-tick oval badge, scattered hand-drawn doodles) and
-`d844ca7d57113572487b0a1d55f5eaa4_002.jpg` (golden wavy-edged bar sign with
-copper border and script lettering). Implemented as: the hero eyebrow's
-hatched oval (`.hero__eyebrow-oval`), wavy-edged sign cards (`.detail-card`,
-`.rsvp-sign` — a stretched SVG background, `100% 100%`, drawn per accent
-color; note plain `border-image` left tiling artifacts in Chrome, hence the
-background approach), wavy section-edge transitions (`.hero::after`, the
-homepage `.site-footer::before`), and scattered `.doodle` SVGs (tulip,
-daisy, sprig, toasting glasses — original artwork, hidden under 900px).
-Reuse these motifs (not new ad hoc ones) when adding pages or sections.
-
-Fonts: a hand-lettered script for the couple's names/big display text (echoing
-the Pinterest board's hand-drawn signage), a serif for section headings, and a
-clean rounded sans for body copy. Loaded via Google Fonts `<link>` tag (no
-bundler needed).
-
-**Image sourcing rule**: Pinterest board images (`Theme/Pinterest_files/`) are
-inspiration references ONLY — never embed them directly on the site, they
-exist purely to inform palette/vibe. The actual proposal photos in
-`assets/images/photos/` (copied from `inspiration/PHOTOS/`) are real site
-assets and are fair game to use directly in the hero, story, and gallery
-sections.
+**Image rules**: `assets/images/inspiration/` (old Pinterest board) is
+reference only — never embed it. The old bright-boho palette (Copper/Golden
+Hour/Apricot…) and Caveat/Fraunces/Poppins fonts are retired for public
+pages; `css/style.css` still carries them for the admin dashboard only.
 
 ## Open questions / not yet decided
 
@@ -223,5 +241,5 @@ sections.
   `food_preference` through the public RPC, and those values are rendered in
   the authenticated admin dashboard — unescaped interpolation there is a
   stored-XSS vector, not just a rendering glitch.
-- When adding new sections/pages, match the existing theme variables in
-  `css/style.css` rather than introducing new ad hoc colors/fonts.
+- When adding new sections/pages, use the tokens and components in
+  `css/site.css` rather than introducing new ad hoc colors/fonts/art.

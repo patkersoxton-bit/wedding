@@ -33,7 +33,10 @@ jobs:
           cp *.html _site/
           cp -r css js _site/
           mkdir -p _site/assets/images
-          cp -r assets/images/photos _site/assets/images/
+          cp -r assets/images/design assets/images/canva _site/assets/images/
+          mkdir -p _site/assets/fonts
+          cp assets/fonts/*.woff2 _site/assets/fonts/
+          cp -r assets/fonts/licenses _site/assets/fonts/
           cp CNAME _site/
 
       - uses: actions/configure-pages@v5
